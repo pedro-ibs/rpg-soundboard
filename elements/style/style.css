@@ -15,6 +15,10 @@ body {
 	margin-bottom: 20px;
 	transition: all 0.3s ease;
 	border: 1px solid #1a5a9e;
+
+	width: 230px;
+	min-width: 230px;
+	max-width: 230px;
 }
 .music-card:hover {
 	transform: translateY(-5px);

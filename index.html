@@ -10,346 +10,675 @@
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 		
 		<link rel="stylesheet" href="elements/style/style.css">
-
-
-
+		<link rel="stylesheet" href="elements/style/style-profile-nave.css">
 	</head>
 
-	<body>
-		<div class="container py-4">
-
-			<div class="header text-center rounded mb-4">
-				<h1>Mesa de Efeitos Sonoros e Ambientação para RPG</h1>
-
-				<p class="lead">Toque múltiplas músicas ao mesmo tempo para criar atmosferas únicas</p>
-
-				<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-					<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#id-ModelCard-SoundAction">
-						<i class="bi bi-plus-circle"></i> Adicionar Novo Som ou Música
-					</button>
-
-					<div class="btn-group" role="group">
-						
-						<button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-							Mais Ações
-						</button>
-
-						<ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-
-							<li>
-								<button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#id-ModelCard-ProfileAction">
-									<i class="bi bi-plus-circle"></i> Criar Novo Perfil
-								</button>
-							</li>
-
-							<li>
-								<button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#id-ModelCard-CategoryAction">
-									<i class="bi bi-plus-circle"></i> Criar Nova Categoria
-								</button>
-							</li>
-				
-							<li>
-								<button class="dropdown-item" id="menu-export-config">
-									<i class="bi bi-download"></i> Exportar Configurações
-								</button>
-							</li>
-
-							<li>
-								<button class="dropdown-item" id="menu-import-config">
-									<i class="bi bi-upload"></i> Importar Configurações
-								</button>
-							</li>
-
-						</ul>
-					</div>
-				</div>
-			</div>
-
-			<div class="currently-playing">
-				<h4><i class="bi bi-music-note-beamed"></i> Faixas Tocando:</h4>
-
-				<div id="current-tracks" class="playing-tracks">
-					<p class="mb-0 text-muted">Nenhuma faixa tocando</p>
-				</div>
-				
-				<div class="btn-group control-buttons mt-2" role="group">
-						<button class="btn btn-sm btn-success" id="resume-all">
-							<i class="bi bi-play"></i> Continuar Todas
-						</button>
-
-						<button class="btn btn-sm btn-info" id="pause-all">
-							<i class="bi bi-pause"></i> Pausar Todas
-						</button>
-						
-						
-						<button class="btn btn-sm btn-danger" id="stop-all">
-							<i class="bi bi-stop"></i> Parar Todas
-						</button>
-				</div>
-			</div>
-
-			<div id="cards-container">
-
-
-			</div>
-		</div>
-
-
-		<div id="id-ModelCard">
-
-			<div class="modal fade" id="id-ModelCard-LoadConfig" tabindex="-1" aria-labelledby="id-ModelCard-LoadConfig-label" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-	
-						<div class="modal-header">
-							<h5 class="modal-title" id="id-ModelCard-LoadConfig-label">Carregar Arquivo Configurações</h5>
-						</div>
-	
-						<div class="modal-body">
-							<form id="id-ModelCard-LoadConfig-form" class="needs-validation", novalidate>
-	
-								<div class="mb-4">
-									<label for="id-ModelCard-LoadConfig-form-file" class="form-label">Arquivo de Configuração</label>
-									<input type="file" class="form-control" id="id-ModelCard-LoadConfig-form-file" accept="json/*" required>
-									<div class="invalid-feedback">
-										Por favor, forneça um arquivo valido!.
-									</div>
-								</div>
-	
-								<div class="btn-group modal-footer mt-5 border-0" role="group">
-									<button type="submit" class="btn btn-primary" id="id-ModelCard-LoadConfig-form-save">Carregar Arquivo</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-
-
-			<div class="modal fade" id="id-ModelCard-ProfileAction" tabindex="-1" aria-labelledby="id-ModelCard-ProfileAction-label" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-	
-						<div class="modal-header">
-							<h5 class="modal-title" id="id-ModelCard-ProfileAction-label">Criar Novo Perfil</h5>
-						</div>
-	
-						<div class="modal-body">
-							<form id="id-ModelCard-ProfileAction-form" class="needs-validation", novalidate>
-	
-								<div class="mb-4">
-									<label for="id-ModelCard-ProfileAction-form-name" class="form-label">Nome do Perfil</label>
-									<input type="text" class="form-control" id="id-ModelCard-ProfileAction-form-name" required>
-									<div class="invalid-feedback">
-										Por favor, forneça um nome valido!.
-									</div>
-								</div>
-								
-								<div class="mb-3">
-									<label for="id-ModelCard-ProfileAction-form-volume" class="form-label">Volume Padrão do Perfil (0-1)</label>
-									<input type="number" class="form-control" id="id-ModelCard-ProfileAction-form-volume" min="0" max="1" step="0.1" value="1.0" required>
-								</div>
-	
-								<div class="btn-group modal-footer mt-5 border-0" role="group">
-									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-									<button type="submit" class="btn btn-primary" id="id-ModelCard-ProfileAction-form-save">Salvar Faixa</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="modal fade" id="id-ModelCard-CategoryAction" tabindex="-1" aria-labelledby="id-ModelCard-CategoryAction-label" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-	
-						<div class="modal-header">
-							<h5 class="modal-title" id="id-ModelCard-CategoryAction-label">Criar Nova Categoria</h5>
-						</div>
-	
-						<div class="modal-body">
-							<form id="id-ModelCard-CategoryAction-form" class="needs-validation", novalidate>
-	
-								<div class="mb-4">
-									<label for="id-ModelCard-CategoryAction-form-name" class="form-label">Nome da Categoria</label>
-									<input type="text" class="form-control" id="id-ModelCard-CategoryAction-form-name" required>
-									<div class="invalid-feedback">
-										Por favor, forneça um nome valido!.
-									</div>
-								</div>
-	
-								<div class="btn-group modal-footer mt-5 border-0" role="group">
-									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-									<button type="submit" class="btn btn-primary" id="id-ModelCard-CategoryAction-form-save">Salvar Faixa</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-
-
-		<div class="modal fade" id="id-ModelCard-SoundAction" tabindex="-1" aria-labelledby="id-ModelCard-SoundAction-label" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-	
-						<div class="modal-header">
-							<h5 class="modal-title" id="id-ModelCard-SoundAction-label">Adicionar Nova Som ou Musica</h5>
-						</div>
-	
-						<div class="modal-body">
-							<form id="id-ModelCard-SoundAction-form" class="needs-validation", novalidate>
-	
-								<div class="mb-3">
-									<label for="id-ModelCard-SoundAction-form-title" class="form-label">Título do Som ou Musica</label>
-									<input type="text" class="form-control" id="id-ModelCard-SoundAction-form-title" required>
-									<div class="invalid-feedback">
-										Por favor, forneça um titulo valido!.
-									</div>
-								</div>
-								
-								<div class="mb-4">
-									<label for="id-ModelCard-SoundAction-form-file" class="form-label">Arquivo de Áudio</label>
-									<input type="file" class="form-control" id="id-ModelCard-SoundAction-form-file" accept="audio/*" required>
-									<div class="invalid-feedback">
-										Por favor, forneça um arquivo valido!.
-									</div>
-								</div>
-								
-								<div class="mb-3">
-									<label for="id-ModelCard-SoundAction-form-profile" class="form-label">Perfil</label>
-									<select class="form-select" id="id-ModelCard-SoundAction-form-profile" required>
-										<div id="id-ModelCard-SoundAction-form-profile-options">
-											<option value="Princial">Princial</option>
-										</div>
-									</select>
-								</div>
-								
-								<div class="mb-4">
-									<label for="id-ModelCard-SoundAction-form-category" class="form-label">Categoria</label>
-									<select class="form-select" id="id-ModelCard-SoundAction-form-category" required>
-										<div id="id-ModelCard-SoundAction-form-category-options">
-											<option value="Trilha Sonora">Trilha Sonora</option>
-										</div>
-									</select>
-								</div>
-	
-								<div class="mb-3">
-									<label for="id-ModelCard-SoundAction-form-volume" class="form-label">Volume Padrão (0-1)</label>
-									<input type="number" class="form-control" id="id-ModelCard-SoundAction-form-volume" min="0" max="1" step="0.1" value="0.7" required>
-								</div>
-	
-								<div class="form-check loop-toggle">
-									<input class="form-check-input" type="checkbox" id="id-ModelCard-SoundAction-form-loop" checked>
-									<label class="form-check-label" for="id-ModelCard-SoundAction-form-loop">Reproduzir em loop</label>
-								</div>
-	
-								<div class="btn-group modal-footer mt-5 border-0" role="group">
-									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-									<button type="submit" class="btn btn-primary" id="id-ModelCard-SoundAction-form-save">Salvar Faixa</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-
-		</div>
+	<body class="container">
 		
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-		
-		<script src="elements/script/config.js"></script>
-		<script src="elements/script/render-style.js"></script>
-		<script src="elements/script/actions.js"></script>
-		<script src="elements/script/form-validation.js"></script>
-		<script src="elements/script/alerts.js"></script>
-
-		<script>
-			document.addEventListener('DOMContentLoaded', function() {
-
-				let config = validateConfigurationFile( null );
-
-				
-
-				function callbackLoadConfigForm(  ){
-
-					const fileInput = document.getElementById('id-ModelCard-LoadConfig-form-file');
-					
-					if (fileInput.files.length === 0) {
-						alert('Por favor, selecione um arquivo!');
-						return;
-					}
-					
-					const file = fileInput.files[0];
-
-
-					if (file.type !== 'application/json' && !file.name.toLowerCase().endsWith('.json')) {
-						alert('Por favor, selecione um arquivo JSON válido!');
-						return;
-					}
-
-
-					const reader = new FileReader();
-					
-					reader.onload = function(event) {
-						try {
-							let jsonData = JSON.parse(event.target.result);
+			<div>
+				<div>
+					<section class="header text-center rounded border-0 mt-5">
+						<h1>Mesa de Efeitos Sonoros e Ambientação para RPG</h1>
+			
+						<p class="lead">Toque múltiplas músicas ao mesmo tempo para criar atmosferas únicas</p>
+			
+						<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+							<button class="btn btn-primary" id="id-add-sond-button" data-bs-toggle="modal" data-bs-target="#id-ModelCard-SoundAction" disabled>
+								<i class="bi bi-plus-circle"></i> Adicionar Novo Som ou Música
+							</button>
+			
+							<div class="btn-group" role="group">
+								
+								<button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+									Mais Ações
+								</button>
+			
+								<ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+			
+									<li>
+										<button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#id-ModelCard-ProfileAction">
+											<i class="bi bi-plus-circle"></i> Criar Novo Perfil
+										</button>
+									</li>
+			
+									<li>
+										<button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#id-ModelCard-CategoryAction">
+											<i class="bi bi-plus-circle"></i> Criar Nova Categoria
+										</button>
+									</li>
 						
+									<li>
+										<button class="dropdown-item" id="menu-export-config">
+											<i class="bi bi-download"></i> Exportar Configurações
+										</button>
+									</li>
+			
+									<li>
+										<button class="dropdown-item" id="menu-import-config">
+											<i class="bi bi-upload"></i> Importar Configurações
+										</button>
+									</li>
+			
+								</ul>
+							</div>
+						</div>
+					</section>
+	
+					<section class=" currently-playing mt-4" >
+						<h4><i class="bi bi-music-note-beamed"></i> Faixas Tocando:</h4>
+				
+						<div id="current-tracks" class="playing-tracks">
+							<p class="mb-0 text-muted">Nenhuma faixa tocando</p>
+						</div>
+						
+						<div class="btn-group control-buttons mt-2" role="group">
+								<button class="btn btn-sm btn-success" id="resume-all">
+									<i class="bi bi-play"></i> Continuar Todas
+								</button>
+				
+								<button class="btn btn-sm btn-info" id="pause-all">
+									<i class="bi bi-pause"></i> Pausar Todas
+								</button>
+								
+								
+								<button class="btn btn-sm btn-danger" id="stop-all">
+									<i class="bi bi-stop"></i> Parar Todas
+								</button>
+						</div>
+					</section>
+				</div>
+
+				<section class="content mt-5 pt-5" id="id-content">
+
+					<ul class="nav nav-pills p-0 pb-2 mb-3" id="id-profile-tab-btn" role="tablist">
+
+			
+					</ul>
+					
+					<div class="tab-content p-3" id="id-profile-tab-content">
+
+
+						<div class="category border-bottom mb-5 ">
 							
-							jsonData = validateConfigurationFile(jsonData);
+							<h3 class="title mb-4">Combate</h3>
 
-							config = jsonData;
-
-							console.log('JSON carregado com sucesso:', config);
-						
-							hideModelCard('id-ModelCard-LoadConfig');
-
-							showSuccessAlert( "Configuração carregada com sucesso!" );
-
-						
-						} catch (error) {
-
-							console.error('Erro ao fazer parse do JSON:', error);
-
-							jsonData = validateConfigurationFile( null );
-
-							config = jsonData;
-
-							console.log('configuração padrão carregada:', config);
-
-							hideModelCard('id-ModelCard-LoadConfig');
-
-							showWarningAlert("Erro de formato de arquivo, configuração padrão carregada!", 5000)
-
-						}
-					};
+							<div class="row d-flex flex-md-row flex-sm-column justify-content-center align-items-center">
+								
+								<div class="music-card m-3 col-3 col-md-4 col-sm-10">
+		
+									<h5>45 acerta?</h5>
+		
+									<div class="control-buttons btn-group mb-2">
+										<button class="btn btn-sm btn-success resume-btn" ${!activeAudios.has(card.id) ? 'disabled' : ''}">
+											<i class="bi bi-play"></i> 
+										</button>
+										<button class="btn btn-sm btn-info pause-btn" ${!activeAudios.has(card.id) ? 'disabled' : ''}>
+											<i class="bi bi-pause"></i> 
+										</button>
+										<button class="btn btn-sm btn-danger stop-btn" ${!activeAudios.has(card.id) ? 'disabled' : ''}>
+											<i class="bi bi-stop"></i> 
+										</button>
+									</div>
+									
+									<div class="d-flex align-self-start mb-2">
+										<i class="bi bi-volume-up-fill m-2"></i>
+										<input type="range" class="volume-control m-2" min="0" max="1" step="0.01" value="${card.volume}">
+									</div>
+									
+									<div class="loop-toggle mb-2">
+										<input class="form-check-input loop-checkbox" type="checkbox" ${card.loop ? 'checked' : ''}>
+										<label class="form-check-label"> <i class="bi bi-repeat"></i> Repetir</label>
+									</div>
+		
+									
+									<div class="card-actions mt-4">
+										<button class="btn btn-sm btn-warning edit-card">
+										<i class="bi bi-pencil"></i> Editar
+										</button>
+										<button class="btn btn-sm btn-danger delete-card">
+										<i class="bi bi-trash"></i> Excluir
+										</button>
+									</div>
+								</div>
 					
-					reader.onerror = function() {
-						showErrorAlert("Erro ao ler o arquivo de configuração por favor carregue o arquivo novamente", 5000)
+								
+								<div class="music-card m-3 col-3 col-md-4 col-sm-10">
+		
+									<h5>45 acerta?</h5>
+		
+									<div class="control-buttons btn-group mb-2">
+										<button class="btn btn-sm btn-success resume-btn" ${!activeAudios.has(card.id) ? 'disabled' : ''}">
+											<i class="bi bi-play"></i> 
+										</button>
+										<button class="btn btn-sm btn-info pause-btn" ${!activeAudios.has(card.id) ? 'disabled' : ''}>
+											<i class="bi bi-pause"></i> 
+										</button>
+										<button class="btn btn-sm btn-danger stop-btn" ${!activeAudios.has(card.id) ? 'disabled' : ''}>
+											<i class="bi bi-stop"></i> 
+										</button>
+									</div>
+									
+									<div class="d-flex align-self-start mb-2">
+										<i class="bi bi-volume-up-fill m-2"></i>
+										<input type="range" class="volume-control m-2" min="0" max="1" step="0.01" value="${card.volume}">
+									</div>
+									
+									<div class="loop-toggle mb-2">
+										<input class="form-check-input loop-checkbox" type="checkbox" ${card.loop ? 'checked' : ''}>
+										<label class="form-check-label"> <i class="bi bi-repeat"></i> Repetir</label>
+									</div>
+		
+									
+									<div class="card-actions mt-4">
+										<button class="btn btn-sm btn-warning edit-card">
+										<i class="bi bi-pencil"></i> Editar
+										</button>
+										<button class="btn btn-sm btn-danger delete-card">
+										<i class="bi bi-trash"></i> Excluir
+										</button>
+									</div>
+								</div>
 
-					};
+								<div class="music-card m-3 col-3 col-md-4 col-sm-10">
+		
+									<h5>45 acerta?</h5>
+		
+									<div class="control-buttons btn-group mb-2">
+										<button class="btn btn-sm btn-success resume-btn" ${!activeAudios.has(card.id) ? 'disabled' : ''}">
+											<i class="bi bi-play"></i> 
+										</button>
+										<button class="btn btn-sm btn-info pause-btn" ${!activeAudios.has(card.id) ? 'disabled' : ''}>
+											<i class="bi bi-pause"></i> 
+										</button>
+										<button class="btn btn-sm btn-danger stop-btn" ${!activeAudios.has(card.id) ? 'disabled' : ''}>
+											<i class="bi bi-stop"></i> 
+										</button>
+									</div>
+									
+									<div class="d-flex align-self-start mb-2">
+										<i class="bi bi-volume-up-fill m-2"></i>
+										<input type="range" class="volume-control m-2" min="0" max="1" step="0.01" value="${card.volume}">
+									</div>
+									
+									<div class="loop-toggle mb-2">
+										<input class="form-check-input loop-checkbox" type="checkbox" ${card.loop ? 'checked' : ''}>
+										<label class="form-check-label"> <i class="bi bi-repeat"></i> Repetir</label>
+									</div>
+		
+									
+									<div class="card-actions mt-4">
+										<button class="btn btn-sm btn-warning edit-card">
+										<i class="bi bi-pencil"></i> Editar
+										</button>
+										<button class="btn btn-sm btn-danger delete-card">
+										<i class="bi bi-trash"></i> Excluir
+										</button>
+									</div>
+								</div>
+
+
+								<div class="music-card m-3 col-3 col-md-4 col-sm-10">
+		
+									<h5>45 acerta?</h5>
+		
+									<div class="control-buttons btn-group mb-2">
+										<button class="btn btn-sm btn-success resume-btn" ${!activeAudios.has(card.id) ? 'disabled' : ''}">
+											<i class="bi bi-play"></i> 
+										</button>
+										<button class="btn btn-sm btn-info pause-btn" ${!activeAudios.has(card.id) ? 'disabled' : ''}>
+											<i class="bi bi-pause"></i> 
+										</button>
+										<button class="btn btn-sm btn-danger stop-btn" ${!activeAudios.has(card.id) ? 'disabled' : ''}>
+											<i class="bi bi-stop"></i> 
+										</button>
+									</div>
+									
+									<div class="d-flex align-self-start mb-2">
+										<i class="bi bi-volume-up-fill m-2"></i>
+										<input type="range" class="volume-control m-2" min="0" max="1" step="0.01" value="${card.volume}">
+									</div>
+									
+									<div class="loop-toggle mb-2">
+										<input class="form-check-input loop-checkbox" type="checkbox" ${card.loop ? 'checked' : ''}>
+										<label class="form-check-label"> <i class="bi bi-repeat"></i> Repetir</label>
+									</div>
+		
+									
+									<div class="card-actions mt-4">
+										<button class="btn btn-sm btn-warning edit-card">
+										<i class="bi bi-pencil"></i> Editar
+										</button>
+										<button class="btn btn-sm btn-danger delete-card">
+										<i class="bi bi-trash"></i> Excluir
+										</button>
+									</div>
+								</div>
+
+
+								<div class="music-card m-3 col-3 col-md-4 col-sm-10">
+		
+									<h5>45 acerta?</h5>
+		
+									<div class="control-buttons btn-group mb-2">
+										<button class="btn btn-sm btn-success resume-btn" ${!activeAudios.has(card.id) ? 'disabled' : ''}">
+											<i class="bi bi-play"></i> 
+										</button>
+										<button class="btn btn-sm btn-info pause-btn" ${!activeAudios.has(card.id) ? 'disabled' : ''}>
+											<i class="bi bi-pause"></i> 
+										</button>
+										<button class="btn btn-sm btn-danger stop-btn" ${!activeAudios.has(card.id) ? 'disabled' : ''}>
+											<i class="bi bi-stop"></i> 
+										</button>
+									</div>
+									
+									<div class="d-flex align-self-start mb-2">
+										<i class="bi bi-volume-up-fill m-2"></i>
+										<input type="range" class="volume-control m-2" min="0" max="1" step="0.01" value="${card.volume}">
+									</div>
+									
+									<div class="loop-toggle mb-2">
+										<input class="form-check-input loop-checkbox" type="checkbox" ${card.loop ? 'checked' : ''}>
+										<label class="form-check-label"> <i class="bi bi-repeat"></i> Repetir</label>
+									</div>
+		
+									
+									<div class="card-actions mt-4">
+										<button class="btn btn-sm btn-warning edit-card">
+										<i class="bi bi-pencil"></i> Editar
+										</button>
+										<button class="btn btn-sm btn-danger delete-card">
+										<i class="bi bi-trash"></i> Excluir
+										</button>
+									</div>
+								</div>
+
+
+							</div>								
+
+						</div>
+
+
+						<div class="category border-bottom mb-5">
+							<h3 class="title mb-4">Efeitos</h3>
+
+						</div>
+							
+
+
+
+
+					</div>
+
+
+				</section>
+			</div>
+
+			<div>
+				<section id="id-ModelCard">
+	
+					<div class="modal fade" id="id-ModelCard-LoadConfig" tabindex="-1" aria-labelledby="id-ModelCard-LoadConfig-label" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+			
+								<div class="modal-header">
+									<h5 class="modal-title" id="id-ModelCard-LoadConfig-label">Carregar Arquivo Configurações</h5>
+								</div>
+			
+								<div class="modal-body">
+									<form id="id-ModelCard-LoadConfig-form" class="needs-validation", novalidate>
+			
+										<div class="mb-4">
+											<label for="id-ModelCard-LoadConfig-form-file" class="form-label">Arquivo de Configuração <i class="bi bi-filetype-json"></i> </label>
+											<input type="file" class="form-control" id="id-ModelCard-LoadConfig-form-file" accept="json/*" required>
+											<div class="invalid-feedback">
+												Por favor, forneça um arquivo valido!.
+											</div>
+										</div>
+			
+										<div class="btn-group modal-footer mt-5 border-0" role="group">
+											<button type="submit" class="btn btn-primary" id="id-ModelCard-LoadConfig-form-save">Carregar Arquivo</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+	
+					<div class="modal fade" id="id-ModelCard-ProfileAction" tabindex="-1" aria-labelledby="id-ModelCard-ProfileAction-label" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+			
+								<div class="modal-header">
+									<h5 class="modal-title" id="id-ModelCard-ProfileAction-label">Criar Novo Perfil</h5>
+								</div>
+			
+								<div class="modal-body">
+									<form id="id-ModelCard-ProfileAction-form" class="needs-validation", novalidate>
+			
+										<div class="mb-4">
+											<label for="id-ModelCard-ProfileAction-form-name" class="form-label">Nome do Perfil</label>
+											<input type="text" class="form-control" id="id-ModelCard-ProfileAction-form-name" required>
+											<div class="invalid-feedback">
+												Por favor, forneça um nome valido!.
+											</div>
+										</div>
+										
+										<div class="mb-3">
+											<label for="id-ModelCard-ProfileAction-form-volume" class="form-label">Volume Padrão do Perfil (0-1) <i class="bi bi-volume-up-fill"></i></label>
+											<input type="number" class="form-control" id="id-ModelCard-ProfileAction-form-volume" min="0" max="1" step="0.01" value="1.0" required>
+										</div>
+			
+										<div class="btn-group modal-footer mt-5 border-0" role="group">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+											<button type="submit" class="btn btn-primary" id="id-ModelCard-ProfileAction-form-save">Criar</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+	
+					<div class="modal fade" id="id-ModelCard-CategoryAction" tabindex="-1" aria-labelledby="id-ModelCard-CategoryAction-label" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+			
+								<div class="modal-header">
+									<h5 class="modal-title" id="id-ModelCard-CategoryAction-label">Criar Nova Categoria</h5>
+								</div>
+			
+								<div class="modal-body">
+									<form id="id-ModelCard-CategoryAction-form" class="needs-validation", novalidate>
+			
+										<div class="mb-4">
+											<label for="id-ModelCard-CategoryAction-form-name" class="form-label">Nome da Categoria</label>
+											<input type="text" class="form-control" id="id-ModelCard-CategoryAction-form-name" required>
+											<div class="invalid-feedback">
+												Por favor, forneça um nome valido!.
+											</div>
+										</div>
+			
+										<div class="btn-group modal-footer mt-5 border-0" role="group">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+											<button type="submit" class="btn btn-primary" id="id-ModelCard-CategoryAction-form-save">Criar</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+	
+					<div class="modal fade" id="id-ModelCard-SoundAction" tabindex="-1" aria-labelledby="id-ModelCard-SoundAction-label" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+			
+								<div class="modal-header">
+									<h5 class="modal-title" id="id-ModelCard-SoundAction-label">Adicionar Nova Som ou Musica</h5>
+								</div>
+			
+								<div class="modal-body">
+									<form id="id-ModelCard-SoundAction-form" class="needs-validation", novalidate>
+			
+										<div class="mb-3">
+											<label for="id-ModelCard-SoundAction-form-title" class="form-label">Título do Som ou Musica</label>
+											<input type="text" class="form-control" id="id-ModelCard-SoundAction-form-title" minlength="3" maxlength="20" required>
+											<div class="invalid-feedback">
+												Por favor, forneça um título válido!. Deve ter pelo menos 3 letras e no máximo 20.
+											</div>
+										</div>
+										
+										<div class="mb-4">
+											<label for="id-ModelCard-SoundAction-form-file" class="form-label">Arquivo de Áudio <i class="bi bi-file-music"></i></label>
+											<input type="file" class="form-control" id="id-ModelCard-SoundAction-form-file" accept="audio/*" required>
+											<div class="invalid-feedback">
+												Por favor, forneça um arquivo valido!.
+											</div>
+										</div>
+										
+										<div class="mb-3">
+											<label for="id-ModelCard-SoundAction-form-profile" class="form-label">Perfil</label>
+											<select class="form-select" id="id-ModelCard-SoundAction-form-profile-options" required></select>
+										</div>
+										
+										<div class="mb-4">
+											<label for="id-ModelCard-SoundAction-form-category" class="form-label">Categoria</label>
+											<select class="form-select" id="id-ModelCard-SoundAction-form-category-options" required></select>
+										</div>
+			
+										<div class="mb-3">
+											<label for="id-ModelCard-SoundAction-form-volume" class="form-label">Volume Padrão (0-1) <i class="bi bi-volume-up-fill"></i></label>
+											<input type="number" class="form-control" id="id-ModelCard-SoundAction-form-volume" min="0" max="1" step="0.01" value="0.7" required>
+										</div>
+			
+										<div class="form-check loop-toggle">
+											<input class="form-check-input" type="checkbox" id="id-ModelCard-SoundAction-form-loop" checked>
+											<label class="form-check-label" for="id-ModelCard-SoundAction-form-loop"><i class="bi bi-repeat"></i> Reproduzir em loop</label>
+										</div>
+			
+										<div class="btn-group modal-footer mt-5 border-0" role="group">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+											<button type="submit" class="btn btn-primary" id="id-ModelCard-SoundAction-form-save">Salvar</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section >
+	
+	
+				<section id="id-section">
+					<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 					
-					reader.readAsText(file);
-				}
+					<script src="elements/script/config.js"></script>
+					<script src="elements/script/render-style.js"></script>
+					<script src="elements/script/actions.js"></script>
+					<script src="elements/script/form-validation.js"></script>
+					<script src="elements/script/alerts.js"></script>
+	
+					<script>
+						document.addEventListener('DOMContentLoaded', function() {
+	
+							let config = validateConfigurationFile( null );
+	
+							function updateSoundActionForm( cfg ){
+								profiles = Object.values(cfg.profile);
+								categorys = Object.values(cfg.category);
+	
+								updateImputOption('id-ModelCard-SoundAction-form-profile-options', getProfileNames( profiles ) );
+								updateImputOption('id-ModelCard-SoundAction-form-category-options', categorys);
+	
+								document.getElementById('id-add-sond-button').disabled = false;
+	
+								console.log(' Sound action form updated!');
+							}
+	
+	
+							function updateProfilesContent( cfg ){
+								profiles = Object.values(cfg.profile);
+								categorys = Object.values(cfg.category);
+	
+								renderProfileButtons( 'id-profile-tab-btn', profiles );
+								renderProfileContent( 'id-profile-tab-content', profiles );
+	
+								console.log(' Profiles content updated!');
+	
+							}
+	
+							function updatePage( cfg ){
+	
+								updateProfilesContent( cfg );
+								updateSoundActionForm( cfg );
+	
+								document.getElementById('id-profile-tab-btn-principal').click();
+								
+								console.log('Page updated!');
+							}
+	
+	
+							function callbackLoadConfigForm(  ){
+	
+								const fileInput = document.getElementById('id-ModelCard-LoadConfig-form-file');
+								
+								if (fileInput.files.length === 0) {
+									showErrorAlert("Por favor, selecione um arquivo JSON!")
 
-				function callbackProfileActionForm()	{}
-				function callbackCategoryActionForm()	{}
-				function callbackSoundActionForm()	{}
-
-
-				const loadConfigForm 		= formListener( 'id-ModelCard-LoadConfig-form',		callbackLoadConfigForm		);
-				const profileActionForm		= formListener( 'id-ModelCard-ProfileAction-form',	callbackProfileActionForm	);
-				const categoryActionForm	= formListener( 'id-ModelCard-CategoryAction-form',	callbackCategoryActionForm	);
-				const soundActionForm		= formListener( 'id-ModelCard-SoundAction-form',	callbackSoundActionForm		);
-
-				document.getElementById('menu-import-config').addEventListener('click', function() { showModelCard( 'id-ModelCard-LoadConfig' )			});
-				document.getElementById('menu-export-config').addEventListener('click', function() { exportConfiguration( 'rpg-soundboard-config', config);	});
-
+									return;
+								}
+								
+								const file = fileInput.files[0];
+	
+	
+								if (file.type !== 'application/json' && !file.name.toLowerCase().endsWith('.json')) {
+									showErrorAlert("Por favor, selecione um arquivo JSON válido!")
+									return;
+								}
+	
+	
+								const reader = new FileReader();
+								
+								reader.onload = function(event) {
+									try {
+										let jsonData = JSON.parse(event.target.result);
+									
+										
+										jsonData = validateConfigurationFile(jsonData);
+	
+										config = jsonData;
+	
+										hideModelCard('id-ModelCard-LoadConfig');
+										
+										console.log('JSON carregado com sucesso:', config);
+										showSuccessAlert( "Configuração carregada com sucesso!" );
+	
+	
+										updatePage( config );
+										
+									} catch (error) {
+	
+										console.error('Erro ao fazer parse do JSON:', error);
+	
+										jsonData = validateConfigurationFile( null );
+	
+										config = jsonData;
+										
+										hideModelCard('id-ModelCard-LoadConfig');
+										
+										console.log('configuração padrão carregada:', config);
+										showWarningAlert("Erro de formato de arquivo, configuração padrão carregada!", 5000)
+	
+										updatePage( config );
+	
+									}
+								};
+								
+								reader.onerror = function() {
+									showErrorAlert("Erro ao ler o arquivo de configuração por favor carregue o arquivo novamente", 5000)
+	
+								};
+								
+								reader.readAsText(file);
+	
+	
+							}
+	
+							function callbackProfileActionForm()	{
+	
+								const nameInput		= document.getElementById('id-ModelCard-ProfileAction-form-name');
+								const volumeInput	= document.getElementById('id-ModelCard-ProfileAction-form-volume');
+								
+								const name		= nameInput.value.trim();
+								const volume		= parseFloat(volumeInput.value);
+													
+								
+								if( getProfile(config.profile,  name ) ){
+									showErrorAlert(`Já existe um perfil com o nome "${name}"!`);
+									return;
+								}
+	
+								const novoPerfil = {
+									name: name,
+									volume: volume
+								}
+	
+								config.profile.splice(config.profile.length + 1, 0, novoPerfil);
+	
+								
+								hideModelCard('id-ModelCard-ProfileAction');
+								
+								console.log('Profile atcarregado com sucesso:', config);
+								showSuccessAlert( `Perfil "${name}" criado com sucesso!` );
+	
+							}
+	
+	
+	
+							function callbackCategoryActionForm()	{
+								const nameInput		= document.getElementById('id-ModelCard-CategoryAction-form-name');
+								const name		= nameInput.value.trim();
+	
+								if( getCategory(config.category,  name ) ){
+									showErrorAlert(`Já existe uma categoria com o nome "${name}"!`);
+									return;
+								}
+	
+								config.category.splice(config.category.length + 1, 0, name );
+	
+								hideModelCard('id-ModelCard-CategoryAction');
+								
+								console.log('Category carregada com sucesso:', config);
+								showSuccessAlert( `Perfil "${name}" criado com sucesso!` );
 				
-				showModelCard( 'id-ModelCard-LoadConfig' );
-			});
-		</script>
+							}
+	
+	
+							function callbackSoundActionForm() {
+								let title		= document.getElementById('id-ModelCard-SoundAction-form-title'			);
+								let soundFile		= document.getElementById('id-ModelCard-SoundAction-form-file'			);
+								let file		= document.getElementById('id-ModelCard-SoundAction-form-profile-options'	);
+								let category		= document.getElementById('id-ModelCard-SoundAction-form-category-options'	);
+								let volume		= document.getElementById('id-ModelCard-SoundAction-form-volume'		);
+								let loop		= document.getElementById('id-ModelCard-SoundAction-form-loop'			);
+	
+								title 		= title.value.trim();
+								file 		= file.value.trim();
+								category 	= category.value.trim();
+								soundFile 	= soundFile.value.trim();
+								volume 		= volume.value;
+								loop 		= loop.value;
+	
+								sound = {
+									title:		title,
+									soundFile:	soundFile,
+									file:		file,
+									category:	category,
+									volume:		volume,
+									loop:		loop
+								};
+	
+	
+								config.sounds.splice(config.sounds.length + 1, 0, sound );
+								console.log('Som Carregado com sucesso:', config);
+	
+								showSuccessAlert( `Som "${title}" Carregado criado com sucesso!` );
+	
+							}
+	
+	
+	
+							const loadConfigForm 		= formListener( 'id-ModelCard-LoadConfig-form',		callbackLoadConfigForm		);
+							const profileActionForm		= formListener( 'id-ModelCard-ProfileAction-form',	callbackProfileActionForm	);
+							const categoryActionForm	= formListener( 'id-ModelCard-CategoryAction-form',	callbackCategoryActionForm	);
+							const soundActionForm		= formListener( 'id-ModelCard-SoundAction-form',	callbackSoundActionForm		);
+	
+							document.getElementById('menu-import-config').addEventListener('click', function() { showModelCard( 'id-ModelCard-LoadConfig' )			});
+							document.getElementById('menu-export-config').addEventListener('click', function() { exportConfiguration( 'rpg-soundboard-config', config);	});
+	
+							
+							showModelCard( 'id-ModelCard-LoadConfig' );
+						});
+					</script>
+				</section>
+			</div>
 
 	</body>
 </html>

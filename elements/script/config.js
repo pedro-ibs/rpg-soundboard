@@ -1,14 +1,15 @@
 
 function validateConfigurationFile(jsonData) {
 	
-	const DEFAULT_PROFILE = { name: 'Principal', volume: 1.0 };
-	const DEFAULT_CATEGORY = 'Trilha Sonora';
+	const DEFAULT_PROFILE	= { name: 'Principal', volume: 1.0 };
+	const DEFAULT_CATEGORY	= 'Trilha Sonora';
+
 
 	const minimalStructure = {
-		profile:    [DEFAULT_PROFILE],
-		category:   [DEFAULT_CATEGORY],
-		sounds:     {}
-	};
+		profile:    [ DEFAULT_PROFILE	],
+		category:   [ DEFAULT_CATEGORY	],
+		sounds:     [	]
+	}; 
 
 	if (typeof jsonData !== 'object' || jsonData === null) {
 		return minimalStructure;
@@ -40,9 +41,15 @@ function validateConfigurationFile(jsonData) {
 		jsonData.category.unshift(DEFAULT_CATEGORY);
 	}
 
-	if (typeof jsonData.sounds !== 'object' || jsonData.sounds === null) {
-		jsonData.sounds = {};
+
+	if (!Array.isArray(jsonData.sounds)) {
+		jsonData.sounds = [ ];
 	}
+
+
+	// if (typeof jsonData.sounds !== 'object' || jsonData.sounds === null) {
+	// 	jsonData.sounds = {};
+	// }
 
 	return jsonData;
 }
@@ -73,32 +80,16 @@ function exportConfiguration( title, config ) {
 }
 
 
-// function addNewProfile(  ) {
-//     const nameInput = document.getElementById('id-ModelCard-ProfileAction-form-name');
-//     const volumeInput = document.getElementById('id-ModelCard-ProfileAction-form-volume');
-    
-//     const name = nameInput.value.trim();
-//     const volume = parseFloat(volumeInput.value);
-    
-    
-//     // Adiciona ao array de perfis (usando appConfig ou outro objeto global)
-//     if (!appConfig.profile.includes(name)) {
-//         appConfig.profile.push(name);
-        
-//         // Atualiza os selects na interface
-//         updateProfileSelects();
-        
-//         console.log(`Perfil "${name}" adicionado com volume padrão ${volume}`);
-        
-//         // Feedback de sucesso
-//         showSuccessMessage(`Perfil "${name}" criado com sucesso!`);
-        
-//         // Limpa o formulário e fecha o modal
-//         nameInput.value = '';
-//         volumeInput.value = '1.0';
-//         hideModelCard('id-ModelCard-ProfileAction');
-        
-//     } else {
-//         alert(`O perfil "${name}" já existe!`);
-//     }
-// }
+
+function getProfile(perfis, nome) {
+    return perfis.find( perfil => perfil.name.toLowerCase() === nome.toLowerCase() );
+}
+
+function getProfileNames(profiles) {
+    return profiles.map(perfil => perfil.name);
+}
+
+
+function getCategory(perfis, nome) {
+    return perfis.find( category => category.toLowerCase() === nome.toLowerCase() );
+}
