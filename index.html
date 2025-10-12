@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Mesa de Efeitos Sonoros</title>
+
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+		
+		<link rel="stylesheet" href="elements/style/style.css">
+
+
+
+	</head>
+
+	<body>
+		<div class="container py-4">
+
+			<div class="header text-center rounded mb-4">
+				<h1>Mesa de Efeitos Sonoros e Ambientação para RPG</h1>
+
+				<p class="lead">Toque múltiplas músicas ao mesmo tempo para criar atmosferas únicas</p>
+
+				<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+					<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#id-ModelCard-SoundAction">
+						<i class="bi bi-plus-circle"></i> Adicionar Novo Som ou Música
+					</button>
+
+					<div class="btn-group" role="group">
+						
+						<button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+							Mais Ações
+						</button>
+
+						<ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+
+							<li>
+								<button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#id-ModelCard-ProfileAction">
+									<i class="bi bi-plus-circle"></i> Criar Novo Perfil
+								</button>
+							</li>
+
+							<li>
+								<button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#id-ModelCard-CategoryAction">
+									<i class="bi bi-plus-circle"></i> Criar Nova Categoria
+								</button>
+							</li>
+				
+							<li>
+								<button class="dropdown-item" id="menu-export-config">
+									<i class="bi bi-download"></i> Exportar Configurações
+								</button>
+							</li>
+
+							<li>
+								<button class="dropdown-item" id="menu-import-config">
+									<i class="bi bi-upload"></i> Importar Configurações
+								</button>
+							</li>
+
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="currently-playing">
+				<h4><i class="bi bi-music-note-beamed"></i> Faixas Tocando:</h4>
+
+				<div id="current-tracks" class="playing-tracks">
+					<p class="mb-0 text-muted">Nenhuma faixa tocando</p>
+				</div>
+				
+				<div class="btn-group control-buttons mt-2" role="group">
+						<button class="btn btn-sm btn-success" id="resume-all">
+							<i class="bi bi-play"></i> Continuar Todas
+						</button>
+
+						<button class="btn btn-sm btn-info" id="pause-all">
+							<i class="bi bi-pause"></i> Pausar Todas
+						</button>
+						
+						
+						<button class="btn btn-sm btn-danger" id="stop-all">
+							<i class="bi bi-stop"></i> Parar Todas
+						</button>
+				</div>
+			</div>
+
+			<div id="cards-container">
+
+
+			</div>
+		</div>
+
+
+		<div id="id-ModelCard">
+
+			<div class="modal fade" id="id-ModelCard-LoadConfig" tabindex="-1" aria-labelledby="id-ModelCard-LoadConfig-label" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+	
+						<div class="modal-header">
+							<h5 class="modal-title" id="id-ModelCard-LoadConfig-label">Carregar Arquivo Configurações</h5>
+						</div>
+	
+						<div class="modal-body">
+							<form id="id-ModelCard-LoadConfig-form" class="needs-validation", novalidate>
+	
+								<div class="mb-4">
+									<label for="id-ModelCard-LoadConfig-form-file" class="form-label">Arquivo de Configuração</label>
+									<input type="file" class="form-control" id="id-ModelCard-LoadConfig-form-file" accept="json/*" required>
+									<div class="invalid-feedback">
+										Por favor, forneça um arquivo valido!.
+									</div>
+								</div>
+	
+								<div class="btn-group modal-footer mt-5 border-0" role="group">
+									<button type="submit" class="btn btn-primary" id="id-ModelCard-LoadConfig-form-save">Carregar Arquivo</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="modal fade" id="id-ModelCard-ProfileAction" tabindex="-1" aria-labelledby="id-ModelCard-ProfileAction-label" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+	
+						<div class="modal-header">
+							<h5 class="modal-title" id="id-ModelCard-ProfileAction-label">Criar Novo Perfil</h5>
+						</div>
+	
+						<div class="modal-body">
+							<form id="id-ModelCard-ProfileAction-form" class="needs-validation", novalidate>
+	
+								<div class="mb-4">
+									<label for="id-ModelCard-ProfileAction-form-name" class="form-label">Nome do Perfil</label>
+									<input type="text" class="form-control" id="id-ModelCard-ProfileAction-form-name" required>
+									<div class="invalid-feedback">
+										Por favor, forneça um nome valido!.
+									</div>
+								</div>
+								
+								<div class="mb-3">
+									<label for="id-ModelCard-ProfileAction-form-volume" class="form-label">Volume Padrão do Perfil (0-1)</label>
+									<input type="number" class="form-control" id="id-ModelCard-ProfileAction-form-volume" min="0" max="1" step="0.1" value="1.0" required>
+								</div>
+	
+								<div class="btn-group modal-footer mt-5 border-0" role="group">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+									<button type="submit" class="btn btn-primary" id="id-ModelCard-ProfileAction-form-save">Salvar Faixa</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal fade" id="id-ModelCard-CategoryAction" tabindex="-1" aria-labelledby="id-ModelCard-CategoryAction-label" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+	
+						<div class="modal-header">
+							<h5 class="modal-title" id="id-ModelCard-CategoryAction-label">Criar Nova Categoria</h5>
+						</div>
+	
+						<div class="modal-body">
+							<form id="id-ModelCard-CategoryAction-form" class="needs-validation", novalidate>
+	
+								<div class="mb-4">
+									<label for="id-ModelCard-CategoryAction-form-name" class="form-label">Nome da Categoria</label>
+									<input type="text" class="form-control" id="id-ModelCard-CategoryAction-form-name" required>
+									<div class="invalid-feedback">
+										Por favor, forneça um nome valido!.
+									</div>
+								</div>
+	
+								<div class="btn-group modal-footer mt-5 border-0" role="group">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+									<button type="submit" class="btn btn-primary" id="id-ModelCard-CategoryAction-form-save">Salvar Faixa</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		<div class="modal fade" id="id-ModelCard-SoundAction" tabindex="-1" aria-labelledby="id-ModelCard-SoundAction-label" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+	
+						<div class="modal-header">
+							<h5 class="modal-title" id="id-ModelCard-SoundAction-label">Adicionar Nova Som ou Musica</h5>
+						</div>
+	
+						<div class="modal-body">
+							<form id="id-ModelCard-SoundAction-form" class="needs-validation", novalidate>
+	
+								<div class="mb-3">
+									<label for="id-ModelCard-SoundAction-form-title" class="form-label">Título do Som ou Musica</label>
+									<input type="text" class="form-control" id="id-ModelCard-SoundAction-form-title" required>
+									<div class="invalid-feedback">
+										Por favor, forneça um titulo valido!.
+									</div>
+								</div>
+								
+								<div class="mb-4">
+									<label for="id-ModelCard-SoundAction-form-file" class="form-label">Arquivo de Áudio</label>
+									<input type="file" class="form-control" id="id-ModelCard-SoundAction-form-file" accept="audio/*" required>
+									<div class="invalid-feedback">
+										Por favor, forneça um arquivo valido!.
+									</div>
+								</div>
+								
+								<div class="mb-3">
+									<label for="id-ModelCard-SoundAction-form-profile" class="form-label">Perfil</label>
+									<select class="form-select" id="id-ModelCard-SoundAction-form-profile" required>
+										<div id="id-ModelCard-SoundAction-form-profile-options">
+											<option value="Princial">Princial</option>
+										</div>
+									</select>
+								</div>
+								
+								<div class="mb-4">
+									<label for="id-ModelCard-SoundAction-form-category" class="form-label">Categoria</label>
+									<select class="form-select" id="id-ModelCard-SoundAction-form-category" required>
+										<div id="id-ModelCard-SoundAction-form-category-options">
+											<option value="Trilha Sonora">Trilha Sonora</option>
+										</div>
+									</select>
+								</div>
+	
+								<div class="mb-3">
+									<label for="id-ModelCard-SoundAction-form-volume" class="form-label">Volume Padrão (0-1)</label>
+									<input type="number" class="form-control" id="id-ModelCard-SoundAction-form-volume" min="0" max="1" step="0.1" value="0.7" required>
+								</div>
+	
+								<div class="form-check loop-toggle">
+									<input class="form-check-input" type="checkbox" id="id-ModelCard-SoundAction-form-loop" checked>
+									<label class="form-check-label" for="id-ModelCard-SoundAction-form-loop">Reproduzir em loop</label>
+								</div>
+	
+								<div class="btn-group modal-footer mt-5 border-0" role="group">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+									<button type="submit" class="btn btn-primary" id="id-ModelCard-SoundAction-form-save">Salvar Faixa</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		
+		<script src="elements/script/config.js"></script>
+		<script src="elements/script/render-style.js"></script>
+		<script src="elements/script/actions.js"></script>
+		<script src="elements/script/form-validation.js"></script>
+		<script src="elements/script/alerts.js"></script>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+
+				let config = validateConfigurationFile( null );
+
+				
+
+				function callbackLoadConfigForm(  ){
+
+					const fileInput = document.getElementById('id-ModelCard-LoadConfig-form-file');
+					
+					if (fileInput.files.length === 0) {
+						alert('Por favor, selecione um arquivo!');
+						return;
+					}
+					
+					const file = fileInput.files[0];
+
+
+					if (file.type !== 'application/json' && !file.name.toLowerCase().endsWith('.json')) {
+						alert('Por favor, selecione um arquivo JSON válido!');
+						return;
+					}
+
+
+					const reader = new FileReader();
+					
+					reader.onload = function(event) {
+						try {
+							let jsonData = JSON.parse(event.target.result);
+						
+							
+							jsonData = validateConfigurationFile(jsonData);
+
+							config = jsonData;
+
+							console.log('JSON carregado com sucesso:', config);
+						
+							hideModelCard('id-ModelCard-LoadConfig');
+
+							showSuccessAlert( "Configuração carregada com sucesso!" );
+
+						
+						} catch (error) {
+
+							console.error('Erro ao fazer parse do JSON:', error);
+
+							jsonData = validateConfigurationFile( null );
+
+							config = jsonData;
+
+							console.log('configuração padrão carregada:', config);
+
+							hideModelCard('id-ModelCard-LoadConfig');
+
+							showWarningAlert("Erro de formato de arquivo, configuração padrão carregada!", 5000)
+
+						}
+					};
+					
+					reader.onerror = function() {
+						showErrorAlert("Erro ao ler o arquivo de configuração por favor carregue o arquivo novamente", 5000)
+
+					};
+					
+					reader.readAsText(file);
+				}
+
+				function callbackProfileActionForm()	{}
+				function callbackCategoryActionForm()	{}
+				function callbackSoundActionForm()	{}
+
+
+				const loadConfigForm 		= formListener( 'id-ModelCard-LoadConfig-form',		callbackLoadConfigForm		);
+				const profileActionForm		= formListener( 'id-ModelCard-ProfileAction-form',	callbackProfileActionForm	);
+				const categoryActionForm	= formListener( 'id-ModelCard-CategoryAction-form',	callbackCategoryActionForm	);
+				const soundActionForm		= formListener( 'id-ModelCard-SoundAction-form',	callbackSoundActionForm		);
+
+				document.getElementById('menu-import-config').addEventListener('click', function() { showModelCard( 'id-ModelCard-LoadConfig' )			});
+				document.getElementById('menu-export-config').addEventListener('click', function() { exportConfiguration( 'rpg-soundboard-config', config);	});
+
+				
+				showModelCard( 'id-ModelCard-LoadConfig' );
+			});
+		</script>
+
+	</body>
+</html>
