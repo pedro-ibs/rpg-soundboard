@@ -50,19 +50,41 @@ function renderProfileButtons(container_id, profiles) {
 }
 
 
-
 function renderProfileContent(container_id, profiles/*, category*/) {
 	
 	const container = document.getElementById( container_id );
 	container.innerHTML = "";
-
+	
 	profiles.forEach(element => {
-		let template = `<div class="tab-pane fade show" id="id-profile-tab-content-${ element.name.toLowerCase() }" role="tabpanel" aria-labelledby="pills-all-tab"><div class="row" id="all-sounds-container"> teste de conteudo para ${ element.name }</div></div>`;
+
+		let template = `<div class="tab-pane fade show" id="id-profile-tab-content-${ element.name.toLowerCase() }" role="tabpanel" aria-labelledby="pills-all-tab">
+			<div class="tab-content p-3">
+				<div class="d-flex align-self-start mb-5">
+					<i class="bi bi-volume-up-fill m-2"></i>
+					<input type="range" class="volume-control m-2" min="0" max="1" step="0.01" value="${ element.volume }" id="id-profile-tab-content-${ element.name.toLowerCase() }-volume">
+				</div>
+
+				<div id="id-profile-tab-content-${ element.name.toLowerCase() }-category">
+					teste de conteudo para ${ element.name }
+				</div>
+			</div>
+		</div>`
+
 		container.innerHTML = container.innerHTML + template;
 	});
 }
 
 
+// function renderProfileContent(container_id, profiles/*, category*/) {
+	
+// 	const container = document.getElementById( container_id );
+// 	container.innerHTML = "";
+
+// 	profiles.forEach(element => {
+// 		let template = `<div class="tab-pane fade show" id="id-profile-tab-content-${ element.name.toLowerCase() }" role="tabpanel" aria-labelledby="pills-all-tab"><div class="row" id="all-sounds-container"> teste de conteudo para ${ element.name }</div></div>`;
+// 		container.innerHTML = container.innerHTML + template;
+// 	});
+// }
 
 function updateImputOption(container_id, array) {
 
