@@ -1,98 +1,115 @@
 
-function showModelCard( element_id  ){
+function showModelCard( target_id  ){
 
-   	const element = document.getElementById(element_id);
+   	const element = document.getElementById(target_id);
         const modal = bootstrap.Modal.getInstance(element) || new bootstrap.Modal(element);
 	modal.show();
 }
 
 
-function hideModelCard( element_id  ){
-   	const element = document.getElementById(element_id);
+function hideModelCard( target_id  ){
+   	const element = document.getElementById(target_id);
         const modal = bootstrap.Modal.getInstance(element) || new bootstrap.Modal(element);
         modal.hide();
 }
 
+function renderModelCard( target_id, model_id, title, html_body ){
 
-function formListener( form_id, exec  ){
+   	const element = document.getElementById(target_id);
 
-	const form = document.getElementById( form_id );
-	
-	form.addEventListener('submit', function(event) {
-	
-		event.preventDefault()
-		event.stopPropagation()
+	const template = `<div class="modal fade" id="${model_id}" tabindex="-1" aria-labelledby="${model_id}-label" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
 
-		if (!form.checkValidity()) {
-			return;
-		}
-		
-		form.classList.add('was-validated')
-	
-		exec()	
-	}, false);
-
-	return form;
-}
-
-
-
-
-function renderProfileButtons(container_id, profiles) {
-
-	const container = document.getElementById( container_id );
-	container.innerHTML = "";
-
-	profiles.forEach(element => {
-		let template = `<li class="nav-item" role="presentation"><button class="nav-link" id="id-profile-tab-btn-${ element.name.toLowerCase() }" data-bs-toggle="pill" data-bs-target="#id-profile-tab-content-${ element.name.toLowerCase() }" type="button" role="tab" aria-controls="pills-all" aria-selected="true"><i class="bi bi-music-note-list"></i>${ element.name }</button></li>`;
-		container.innerHTML = container.innerHTML + template;
-	});
-}
-
-
-function renderProfileContent(container_id, profiles/*, category*/) {
-	
-	const container = document.getElementById( container_id );
-	container.innerHTML = "";
-	
-	profiles.forEach(element => {
-
-		let template = `<div class="tab-pane fade show" id="id-profile-tab-content-${ element.name.toLowerCase() }" role="tabpanel" aria-labelledby="pills-all-tab">
-			<div class="tab-content p-3">
-				<div class="d-flex align-self-start mb-5">
-					<i class="bi bi-volume-up-fill m-2"></i>
-					<input type="range" class="volume-control m-2" min="0" max="1" step="0.01" value="${ element.volume }" id="id-profile-tab-content-${ element.name.toLowerCase() }-volume">
+				<div class="modal-header">
+					<h5 class="modal-title" id="${model_id}-label">${title}</h5>
 				</div>
 
-				<div id="id-profile-tab-content-${ element.name.toLowerCase() }-category">
-					teste de conteudo para ${ element.name }
+				<div class="modal-body">
+					${html_body}
 				</div>
 			</div>
-		</div>`
+		</div>
+	</div>`;
 
-		container.innerHTML = container.innerHTML + template;
-	});
+	element.innerHTML = element.innerHTML + template;
+}
+
+function buildCardBody( sound ){
+	const template = `<h5>${sound.title}</h5>
+	
+	<div class="control-buttons btn-group mb-2">
+		<button class="btn btn-sm btn-success resume-btn" id="id-sound-event-play-${sound.id}">
+			<i class="bi bi-play"></i> 
+		</button>
+		<button class="btn btn-sm btn-info pause-btn" id="id-sound-event-pause-${sound.id}">
+			<i class="bi bi-pause"></i> 
+		</button>
+		<button class="btn btn-sm btn-danger stop-btn" id="id-sound-event-stop-${sound.id}">
+			<i class="bi bi-stop"></i> 
+		</button>
+	</div>
+	
+	<div class="d-flex align-self-start mb-2">
+		<i class="bi bi-volume-up-fill m-2"></i>
+		<input type="range" class="volume-control m-2" min="0" max="1" step="0.01" value="${sound.volume}" id="id-sound-event-volume-${sound.id}">
+	</div>
+	
+	<div class="loop-toggle mb-2">
+		<input class="form-check-input loop-checkbox" type="checkbox" ${sound.loop ? 'checked' : ''}  id="id-sound-event-loop-${sound.id}" >
+		<label class="form-check-label"> <i class="bi bi-repeat"></i> Repetir</label>
+	</div>
+
+	
+	<div class="card-actions mt-4">
+		<button class="btn btn-sm btn-warning edit-card" id="id-sound-event-edit-${sound.id}">
+			<i class="bi bi-pencil"></i> Editar
+		</button>
+		<button class="btn btn-sm btn-danger delete-card" id="id-sound-event-remove-${sound.id}">
+			<i class="bi bi-trash"></i> Excluir
+		</button>
+	</div>`;
+
+	return template;
 }
 
 
-// function renderProfileContent(container_id, profiles/*, category*/) {
-	
-// 	const container = document.getElementById( container_id );
-// 	container.innerHTML = "";
 
-// 	profiles.forEach(element => {
-// 		let template = `<div class="tab-pane fade show" id="id-profile-tab-content-${ element.name.toLowerCase() }" role="tabpanel" aria-labelledby="pills-all-tab"><div class="row" id="all-sounds-container"> teste de conteudo para ${ element.name }</div></div>`;
-// 		container.innerHTML = container.innerHTML + template;
-// 	});
-// }
+function buildCard( sound, html_body ){
+	const template = `<div class="music-card m-3 col-3 col-md-4 col-sm-10" id="id-sound-content-${sound.id}">
+		${html_body}
+	</div>`;
 
-function updateImputOption(container_id, array) {
+	return template;
+}
+
+
+function renderCard( container_id, sound_array ){
 
 	const container = document.getElementById( container_id );
 	container.innerHTML = "";
 
-	array.forEach(element => {
-		let template = `<option value="${element}">${element}</option>`;
-		container.innerHTML = container.innerHTML + template;
+	sound_array.forEach(sound => {
+		container.innerHTML = container.innerHTML + buildCard(sound, buildCardBody(sound) );
 	});
+
+
+}
+
+function filterSoundByCategory(sounds, category) {
+	return sounds.filter(sound => sound.category === category);
+}
+
+function filterSoundById(sounds, id) {
+	return sounds.find(sound => sound.id == id);
+}
+
+function removeSoundById(sounds, sound_id) {
+    return sounds.filter(sound => sound.id != sound_id);
+}
+
+function handleEvent(target_id, prefix, callback ) {
+	if ( target_id.startsWith( prefix ) == false ) return;
+	console.log(`target event: ${target_id}`);
+	callback(target_id);	
 }

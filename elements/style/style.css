@@ -44,12 +44,7 @@ body {
 	width: 100%;
 	margin-top: 10px;
 }
-.category-title {
-	color: #e94560;
-	margin: 20px 0 15px 0;
-	padding-bottom: 10px;
-	border-bottom: 1px solid #0f3460;
-}
+/* .category-title { } */
 .currently-playing {
 	background-color: #16213e;
 	padding: 15px;

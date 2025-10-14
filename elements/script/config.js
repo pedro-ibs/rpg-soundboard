@@ -1,13 +1,8 @@
 
 function validateConfigurationFile(jsonData) {
 	
-	const DEFAULT_PROFILE	= { name: 'Principal', volume: 1.0 };
-	const DEFAULT_CATEGORY	= 'Trilha Sonora';
-
-
 	const minimalStructure = {
-		profile:    [ DEFAULT_PROFILE	],
-		category:   [ DEFAULT_CATEGORY	],
+		id_counter: 0,
 		sounds:     [	]
 	}; 
 
@@ -15,41 +10,9 @@ function validateConfigurationFile(jsonData) {
 		return minimalStructure;
 	}
 
-	if (!Array.isArray(jsonData.profile)) {
-		jsonData.profile = [DEFAULT_PROFILE];
-	} if (jsonData.profile.length === 0) {
-		jsonData.profile = [DEFAULT_PROFILE];
-	} else {
-		let principalExists = jsonData.profile.some(item => item.name === 'Principal');
-		
-		if (!principalExists) {
-			jsonData.profile.unshift(DEFAULT_PROFILE);
-		} else {
-			const principalIndex = jsonData.profile.findIndex(item => item.name === 'Principal');
-
-			if (principalIndex > 0) {
-				const principalItem = jsonData.profile.splice(principalIndex, 1)[0];
-				jsonData.profile.unshift(principalItem);
-			}
-		}
-	}
-
-	if (!Array.isArray(jsonData.category)) {
-		jsonData.category = [ DEFAULT_CATEGORY ];
-	} else {
-		jsonData.category = jsonData.category.filter(item => item !== DEFAULT_CATEGORY);
-		jsonData.category.unshift(DEFAULT_CATEGORY);
-	}
-
-
 	if (!Array.isArray(jsonData.sounds)) {
 		jsonData.sounds = [ ];
 	}
-
-
-	// if (typeof jsonData.sounds !== 'object' || jsonData.sounds === null) {
-	// 	jsonData.sounds = {};
-	// }
 
 	return jsonData;
 }
@@ -77,19 +40,4 @@ function exportConfiguration( title, config ) {
 		console.error('Erro ao exportar configurações:', error);
 		alert('Erro ao exportar configurações!');
 	}
-}
-
-
-
-function getProfile(perfis, nome) {
-    return perfis.find( perfil => perfil.name.toLowerCase() === nome.toLowerCase() );
-}
-
-function getProfileNames(profiles) {
-    return profiles.map(perfil => perfil.name);
-}
-
-
-function getCategory(perfis, nome) {
-    return perfis.find( category => category.toLowerCase() === nome.toLowerCase() );
 }
