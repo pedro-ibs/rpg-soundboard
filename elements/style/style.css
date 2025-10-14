@@ -163,3 +163,77 @@ body {
 	display: flex;
 	gap: 5px;
 }
+
+.music-card.playing {
+	border-left: 5px solid #4CAF50 !important;
+	box-shadow: 0 0 15px rgba(76, 175, 80, 0.4) !important;
+}
+
+.music-card.paused {
+	border-left: 5px solid #17a2b8 !important;
+	box-shadow: 0 0 15px rgba(23, 162, 184, 0.4) !important;
+}
+
+.music-card.stopped {
+	border-left: 5px solid #0f3460 !important;
+}
+
+/* Badges para a lista de tocando agora */
+.badge.bg-success, .badge.bg-warning {
+	font-size: 0.7em;
+}
+
+.track-item {
+	transition: all 0.3s ease;
+}
+
+.track-item:hover {
+	background-color: #1a5a9e !important;
+}
+
+
+/* Estilos para a barra de progresso */
+audio-progress {
+	width: 100%;
+	margin: 10px 0;
+}
+
+/* Estilizar a barra de progresso */
+progress {
+	border-radius: 10px;
+	overflow: hidden;
+	background-color: #0f3460;
+}
+
+progress::-webkit-progress-bar {
+	background-color: #0f3460;
+	border-radius: 10px;
+}
+
+progress::-webkit-progress-value {
+	background-color: #e94560;
+	border-radius: 10px;
+	transition: width 0.3s ease;
+}
+
+progress::-moz-progress-bar {
+	background-color: #e94560;
+	border-radius: 10px;
+}
+
+/* Tempo da música */
+.audio-progress small {
+	font-size: 0.75rem;
+	color: #8fa3c2;
+}
+
+
+.track-controls .badge.bg-warning {
+    background-color: #17a2b8 !important;
+    /* Ou use #138496 para combinar com o hover */
+}
+
+/* Se preferir, pode criar uma classe específica */
+.track-controls .badge.bg-paused {
+    background-color: #17a2b8 !important;
+}

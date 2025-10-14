@@ -41,3 +41,26 @@ function exportConfiguration( title, config ) {
 		alert('Erro ao exportar configurações!');
 	}
 }
+
+function filterSoundByCategory(sounds, category) {
+	return sounds.filter(sound => sound.category === category);
+}
+
+function filterSoundById(sounds, id) {
+	return sounds.find(sound => sound.id == id);
+}
+
+function removeSoundById(sounds, sound_id) {
+    return sounds.filter(sound => sound.id != sound_id);
+}
+
+function updateSoundById(sounds, id, updates) {
+	const soundIndex = sounds.findIndex(sound => sound.id == id);
+
+	if (soundIndex !== -1) {
+		sounds[soundIndex] = { ...sounds[soundIndex], ...updates };
+		return true;
+	}
+
+	return false;
+}

@@ -50,6 +50,19 @@ function buildCardBody( sound ){
 		</button>
 	</div>
 	
+	<div class="audio-progress mb-2">
+		<div class="d-flex justify-content-between align-items-center mb-1">
+			<small id="id-sound-time-${sound.id}">0:00 / 0:00</small>
+		</div>
+		<progress 
+			class="form-range" 
+			id="id-sound-progress-${sound.id}" 
+			value="0" 
+			max="100" 
+			style="width: 100%; height: 6px;"
+		></progress>
+	</div>
+
 	<div class="d-flex align-self-start mb-2">
 		<i class="bi bi-volume-up-fill m-2"></i>
 		<input type="range" class="volume-control m-2" min="0" max="1" step="0.01" value="${sound.volume}" id="id-sound-event-volume-${sound.id}">
@@ -75,41 +88,73 @@ function buildCardBody( sound ){
 
 
 
-function buildCard( sound, html_body ){
-	const template = `<div class="music-card m-3 col-3 col-md-4 col-sm-10" id="id-sound-content-${sound.id}">
+function buildCard( sound, html_body, appState ){
+
+	const audioState = appState.playingSounds.get( String(sound.id) );
+	let stateClass = '';
+	
+	if (audioState == 'playing') {
+		stateClass = 'playing';
+	} else if (audioState == 'paused') {
+		stateClass = 'paused';
+	}
+	
+	const template = `<div class="music-card m-3 col-3 col-md-4 col-sm-10 ${stateClass}" id="id-sound-content-${sound.id}">
 		${html_body}
 	</div>`;
 
 	return template;
+
 }
 
 
-function renderCard( container_id, sound_array ){
+function renderCard( container_id, sound_array, appState ){
 
 	const container = document.getElementById( container_id );
 	container.innerHTML = "";
 
 	sound_array.forEach(sound => {
-		container.innerHTML = container.innerHTML + buildCard(sound, buildCardBody(sound) );
+		container.innerHTML = container.innerHTML + buildCard(sound, buildCardBody(sound), appState );
 	});
 
 
 }
 
-function filterSoundByCategory(sounds, category) {
-	return sounds.filter(sound => sound.category === category);
-}
 
-function filterSoundById(sounds, id) {
-	return sounds.find(sound => sound.id == id);
-}
-
-function removeSoundById(sounds, sound_id) {
-    return sounds.filter(sound => sound.id != sound_id);
-}
 
 function handleEvent(target_id, prefix, callback ) {
-	if ( target_id.startsWith( prefix ) == false ) return;
+	if (!target_id || !target_id.startsWith(prefix)) return;
 	console.log(`target event: ${target_id}`);
 	callback(target_id);	
+}
+
+
+function updateCurrentlyPlaying() {
+	const container = document.getElementById('current-tracks');
+	const playingSounds = Array.from(appState.playingSounds.entries()).filter(([_, state]) => state === 'playing' || state === 'paused');
+		
+	if (playingSounds.length === 0) {
+		container.innerHTML = '<p class="mb-0 text-muted">Nenhuma faixa tocando</p>';
+		return;
+	}
+    
+	let html = '';
+	playingSounds.forEach(([soundId, state]) => {
+		const sound = filterSoundById(appState.config.sounds, soundId);
+		if (sound) {
+			html += `<div class="track-item">
+				<span>${sound.title}</span>
+				<div class="track-controls">
+					<span class="badge ${state === 'playing' ? 'bg-success' : 'bg-warning'}">
+						${state === 'playing' ? '▶️ Tocando' : '⏸️ Pausada'}
+					</span>
+					<button class="btn btn-sm btn-outline-secondary" onclick="audioSystem.stop(${soundId})">
+						<i class="bi bi-x"></i>
+					</button>
+				</div>
+			</div>`;
+		}
+	});
+
+	container.innerHTML = html;
 }

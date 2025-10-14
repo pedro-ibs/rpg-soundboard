@@ -48,13 +48,22 @@
 							</ul>
 						</div>
 					</div>
+
+					<div class="alert alert-info mt-3 mb-0">
+						<small>
+						<i class="bi bi-info-circle"></i> 
+							<strong>Importante:</strong> Coloque seus arquivos de áudio na pasta <code>sounds/</code> na raiz do projeto para que sejam carregados corretamente. 
+						</small>
+					</div>
+
 				</section>
 
 				<section class="currently-playing mt-4" >
 					<h4><i class="bi bi-music-note-beamed"></i> Faixas Tocando:</h4>
 			
 					<div id="current-tracks" class="playing-tracks">
-						<p class="mb-0 text-muted">Nenhuma faixa tocando</p>
+						<p class="mb-0">Nenhuma faixa tocando</p>
+
 					</div>
 					
 					<div class="btn-group control-buttons mt-2" role="group">
@@ -129,30 +138,108 @@
 			<section id="id-script">
 				<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 				
+				<script src="elements/script/alerts.js"></script>
+
 				<script src="elements/script/config.js"></script>
+				<script src="elements/script/audio-system.js"></script>
 				<script src="elements/script/actions.js"></script>
 				<script src="elements/script/form.js"></script>
-				<script src="elements/script/alerts.js"></script>
+				
 
 				<script>
 					document.addEventListener('DOMContentLoaded', function() {
 
-						renderModelCard( 'id-ModelCard', 'id-ModelCard-config',			'Carregar Arquivo Configurações',	getHtmlOfLoadConfigForm()	);
-						renderModelCard( 'id-ModelCard', 'id-ModelCard-sound-create',		'Adicionar Nova Som ou Musica', 	getHtmlOfSoundForm('create')	);
-						renderModelCard( 'id-ModelCard', 'id-ModelCard-sound-update',		'Adicionar Nova Som ou Musica', 	getHtmlOfSoundForm('update')	);
+						let appState = {
+							playingSounds: new Map(),
+							
+							config: validateConfigurationFile( null ),
+
+							categoryVolumes: {
+								soundtrack: 1.0,
+								background: 1.0,
+								effects: 1.0
+							}
+						};
 
 						
 
-						let config = validateConfigurationFile( null );
+						function refreshAllCards() {
+							renderCard('id-content-category-soundtrack-cards',	filterSoundByCategory( appState.config.sounds, 'soundtrack'	), appState );
+							renderCard('id-content-category-background-cards',	filterSoundByCategory( appState.config.sounds, 'background'	), appState );
+							renderCard('id-content-category-effects-cards', 	filterSoundByCategory( appState.config.sounds, 'effects'	), appState );
 
-						const configForm 		= formListener( 'id-ModelCard-config-form',		callbackConfigForm		);
-						const SounCreateForm		= formListener( 'id-ModelCard-sound-create-form',	callbackSoundCreateForm		);
-						const SounUpdateForm 		= formListener(	'id-ModelCard-sound-update-form',	callbackSoundUpdateForm		)
+							updateCurrentlyPlaying()
+						}
 
-						document.getElementById('menu-import-config').addEventListener('click', function() { showModelCard( 'id-ModelCard-config'			) });
-						document.getElementById('menu-export-config').addEventListener('click', function() { exportConfiguration( 'rpg-soundboard-config', config	) });
+						function updateCurrentlyPlaying() {
+							const container = document.getElementById('current-tracks');
+							const playingSounds = Array.from(appState.playingSounds.entries()).filter(([_, state]) => state === 'playing' || state === 'paused');
+								
+							if (playingSounds.length === 0) {
+								container.innerHTML = '<p class="mb-0 text-muted">Nenhuma faixa tocando</p>';
+								return;
+							}
+						
+							let html = '';
+							playingSounds.forEach(([soundId, state]) => {
+								const sound = filterSoundById(appState.config.sounds, soundId);
+								if (sound) {
+									// html += `<div class="track-item">
+									// 	<span>${sound.title}</span>
+									// 	<div class="track-controls">
+									// 		<span class="badge ${state === 'playing' ? 'bg-success' : 'bg-warning'}">
+									// 			${state === 'playing' ? '<i class="bi bi-play"></i>' : '<i class="bi bi-pause"></i>'}
+									// 		</span>
+									// 	</div>
+									// </div>`;
 
-						formVal();
+
+									// html += `<div class="track-item">
+									// 	<span>${sound.title}</span>
+									// 	<div class="track-controls">
+									// 		<span class="badge ${state === 'playing' ? 'bg-success' : 'bg-info'}">
+									// 			${state === 'playing' ? '<i class="bi bi-play"></i>' : '<i class="bi bi-pause"></i>'}
+									// 		</span>
+									// 	</div>
+									// </div>`
+
+
+									html += `<div class="track-item">
+										<span>${sound.title}</span>
+										<div class="track-controls">
+											<div class="control-buttons btn-group mb-2">
+												<button class="btn btn-sm btn-success resume-btn" id="id-sound-event-play-${sound.id}"}>
+													<i class="bi bi-play"></i> 
+												</button>
+												<button class="btn btn-sm btn-info pause-btn" id="id-sound-event-pause-${sound.id}"}>
+													<i class="bi bi-pause"></i> 
+												</button>
+												<button class="btn btn-sm btn-danger stop-btn" id="id-sound-event-stop-${sound.id}">
+													<i class="bi bi-stop"></i> 
+												</button>
+											</div>
+										</div>
+									</div>`
+
+
+									// html += `<div class="track-item d-flex align-items-center justify-content-between">
+									// 		<div class="fw-bold">${sound.title}</div>
+									// 		<progress class="form-range mx-3" id="id-track-progress-${soundId}" value="0" max="100" style="width: 70%; height: 6px;"></progress>
+									// 	<div class="track-controls d-flex align-items-center">
+									// 		<span class="badge ${state === 'playing' ? 'bg-success' : 'bg-info'}">
+									// 			${state === 'playing' ? '<i class="bi bi-play"></i>' : '<i class="bi bi-pause"></i>'}
+									// 		</span>
+									// 	</div>
+									// </div>`;
+								}
+							});
+
+							container.innerHTML = html;
+						}
+
+
+						let audioSystem = createAudioSystem(appState, refreshAllCards, updateCurrentlyPlaying);
+
 
 						function callbackConfigForm(){
 
@@ -180,16 +267,16 @@
 									
 									jsonData = validateConfigurationFile(jsonData);
 
-									config = jsonData;
+									appState.config = jsonData;
+
+									refreshAllCards();
 
 									hideModelCard('id-ModelCard-config');
 									
-									console.log('JSON carregado com sucesso:', config);
+									console.log('JSON carregado com sucesso:', appState.config);
 									showSuccessAlert( "Configuração carregada com sucesso!" );
 
-									renderCard('id-content-category-soundtrack-cards',	 filterSoundByCategory(config.sounds, 'soundtrack'	) );
-									renderCard('id-content-category-background-cards',	 filterSoundByCategory(config.sounds, 'background'	) );
-									renderCard('id-content-category-effects-cards',		 filterSoundByCategory(config.sounds, 'effects'		) );
+
 									
 								} catch (error) {
 
@@ -197,11 +284,11 @@
 
 									jsonData = validateConfigurationFile( null );
 
-									config = jsonData;
+									appState.config = jsonData;
 									
 									hideModelCard('id-ModelCard-config');
 									
-									console.log('configuração padrão carregada:', config);
+									console.log('configuração padrão carregada:', appState.config);
 									showWarningAlert("Erro de formato de arquivo, configuração padrão carregada!", 5000)
 
 								}
@@ -231,7 +318,7 @@
 							loop 		= loop.checked;
 
 							sound = {
-								id:		config.id_counter + 1,
+								id:		appState.config.id_counter + 1,
 								title:		title,
 								sound:		file,
 								category:	category,
@@ -239,11 +326,12 @@
 								loop:		loop
 							};
 
-							config.id_counter = sound.id;
+							appState.config.id_counter = sound.id;
 
-							config.sounds.splice(config.sounds.length + 1, 0, sound );
-							console.log('Som Carregado com sucesso:', config);
+							appState.config.sounds.splice(appState.config.sounds.length + 1, 0, sound );
+							console.log('Som Carregado com sucesso:', appState.config);
 							
+							refreshAllCards();
 
 							showSuccessAlert( `Som "${sound.title}" criado com sucesso!` );
 
@@ -251,12 +339,13 @@
 
 							document.getElementById('id-ModelCard-sound-create-form').reset();
 
+
+
 						}
 
 						function callbackSoundUpdateForm(){
 
 							let title		= document.getElementById('id-ModelCard-sound-update-form-title'		);
-							let file		= document.getElementById('id-ModelCard-sound-update-form-file'			);
 							let category		= document.getElementById('id-ModelCard-sound-update-form-category-options'	);
 							let volume		= document.getElementById('id-ModelCard-sound-update-form-volume'		);
 							let loop		= document.getElementById('id-ModelCard-sound-update-form-loop'			);
@@ -264,42 +353,39 @@
 
 							title 			= title.value.trim();
 							category 		= category.value.trim();
-							file 			= file.value.split('\\').at(-1).trim(),
 							volume	 		= volume.value;
 							loop 			= loop.checked;
 							sound_id		= sound_id.innerHTML;
 
-							sound = {
-								id:		sound_id,
-								title:		title,
-								sound:		file,
-								category:	category,
-								volume:		volume,
-								loop:		loop
-							};
+							sound = filterSoundById(appState.config.sounds, sound_id);
 
-							config.sounds = removeSoundById(config.sounds, sound_id);
+							sound.title	= title,
+							sound.category	= category,
+							sound.volume	= volume,
+							sound.loop	= loop
 
-							document.getElementById(`id-sound-content-${sound.id}` ).innerHTML = buildCardBody(sound);
-							
+
+							updateSoundById(appState.config.sounds, sound_id, sound);
+
+							sound_id.innerHTML = '';
 
 							showSuccessAlert( `Som "${sound.title}" atualizado com sucesso!` );
+
+							refreshAllCards();
 
 							hideModelCard( 'id-ModelCard-sound-update' );
 
 							document.getElementById('id-ModelCard-sound-update-form').reset();	
 						}
 
-
 						function editeCard( target_id ){
 
 							const sound_id = target_id.split('-').at(-1);
 							console.log(sound_id);
 
-							sound = filterSoundById(config.sounds, sound_id);
+							sound = filterSoundById(appState.config.sounds, sound_id);
 
 							document.getElementById('id-ModelCard-sound-update-form-title'			).value 	= sound.title
-							document.getElementById('id-ModelCard-sound-update-form-file'			).textContent 	= sound.file;
 							document.getElementById('id-ModelCard-sound-update-form-category-options'	).value 	= sound.category;
 							document.getElementById('id-ModelCard-sound-update-form-volume'			).value 	= sound.volume;
 							document.getElementById('id-ModelCard-sound-update-form-loop'			).checked	= sound.loop;
@@ -314,33 +400,131 @@
 
 							const sound_id = target_id.split('-').at(-1);
 
+							audioSystem.stop(sound_id);
+
 							const div = document.getElementById( `id-sound-content-${sound_id}` );
 							div.remove();
 
-							config.sounds = removeSoundById(config.sounds, sound_id)
+							appState.config.sounds = removeSoundById(appState.config.sounds, sound_id)
 
-							console.log('configuração alterada:', config);
+							console.log('configuração alterada:', appState.config);
 
 							showSuccessAlert( "Faixa removida!" );
 						}
 
+						function updateSoundVolume( event ){
+							const soundId = event.target.id.split('-').at(-1);
+							const volume = parseFloat(event.target.value);
+							
+							// Atualiza o volume no estado
+							const sound = filterSoundById(appState.config.sounds, soundId);
+							if (sound) {
+								sound.volume = volume;
+								audioSystem.setVolume(soundId, volume);
+							}
+						}
+						
+						function updateSoundLoop( event ){
+							const soundId = event.target.id.split('-').at(-1);
+							const loop = event.target.checked;
+							
+							const sound = filterSoundById(appState.config.sounds, soundId);
+							if (sound) {
+								sound.loop = loop;
+							
+								// Atualiza a instância de áudio se existir
+								const audio = audioSystem.instances.get(soundId);
+								if (audio) {
+									audio.loop = loop;
+								}
+							}
+						}
+
+
+						renderModelCard( 'id-ModelCard', 'id-ModelCard-config',			'Carregar Arquivo Configurações',	getHtmlOfLoadConfigForm()	);
+						renderModelCard( 'id-ModelCard', 'id-ModelCard-sound-create',		'Adicionar Nova Som ou Musica', 	getHtmlOfSoundForm('create')	);
+						renderModelCard( 'id-ModelCard', 'id-ModelCard-sound-update',		'Adicionar Nova Som ou Musica', 	getHtmlOfSoundForm('update')	);
+
+						formListener( 'id-ModelCard-config-form',	callbackConfigForm		);
+						formListener( 'id-ModelCard-sound-create-form',	callbackSoundCreateForm		);
+						formListener( 'id-ModelCard-sound-update-form',	callbackSoundUpdateForm		);
+
+						formVal();
+
 						showModelCard( 'id-ModelCard-config' );
 
+						document.getElementById('menu-import-config').addEventListener('click', function() { showModelCard( 'id-ModelCard-config'					) });
+						document.getElementById('menu-export-config').addEventListener('click', function() { exportConfiguration( 'rpg-soundboard-config', appState.config		) });
+						document.getElementById( `id-ModelCard-sound-update-form-file` ).remove();
+
+						document.getElementById('id-sound-event-play-all').addEventListener('click', () => audioSystem.playAll());
+						document.getElementById('id-sound-event-pause-all').addEventListener('click', () => audioSystem.pauseAll());
+						document.getElementById('id-sound-event-stop-all').addEventListener('click', () => audioSystem.stopAll());
+
+
+						document.getElementById('id-category-event-volume-soundtrack').addEventListener('input', (e) => {
+							audioSystem.updateCategoryVolume('soundtrack', parseFloat(e.target.value));
+						});
+
+						document.getElementById('id-category-event-volume-background').addEventListener('input', (e) => {
+							audioSystem.updateCategoryVolume('background', parseFloat(e.target.value));
+						});
+
+						document.getElementById('id-category-event-volume-effects').addEventListener('input', (e) => {
+							audioSystem.updateCategoryVolume('effects', parseFloat(e.target.value));
+						});
+
+
+
 						document.body.addEventListener('click', function(event) {
-							if (event.target.tagName === 'BUTTON') {
-								handleEvent(event.target.id, 'id-sound-event-edit',	editeCard	);
-								handleEvent(event.target.id, 'id-sound-event-remove',	removeCard	);
+
+							// console.log('Click detectado no elemento:', event.target);
+							console.log('ID do elemento:', event.target.id);
+							console.log('Tag do elemento:', event.target.tagName);
+
+
+							// Encontra o elemento botão (pode ser o próprio ou um pai)
+							let buttonElement = event.target;
+							
+							// Se o clique foi em um elemento dentro do botão, sobe até encontrar o botão
+							while (buttonElement && buttonElement.tagName !== 'BUTTON') {
+								buttonElement = buttonElement.parentElement;
+								if (!buttonElement) break;
+							}
+
+							
+							if (buttonElement && buttonElement.tagName === 'BUTTON') {
+
+								handleEvent(buttonElement.id, 'id-sound-event-edit',	editeCard	);
+								handleEvent(buttonElement.id, 'id-sound-event-remove',	removeCard	);
+
+								handleEvent(buttonElement.id, 'id-sound-event-play', (targetId) => {
+									const soundId = targetId.split('-').at(-1);
+									audioSystem.play(soundId);
+								});
+									
+								handleEvent(buttonElement.id, 'id-sound-event-pause', (targetId) => {
+									const soundId = targetId.split('-').at(-1);
+									audioSystem.pause(soundId);
+								});
+									
+								handleEvent(buttonElement.id, 'id-sound-event-stop', (targetId) => {
+									const soundId = targetId.split('-').at(-1);
+									audioSystem.stop(soundId);
+								});
+
 							}
 						});
 
 
 						document.body.addEventListener('input', function(event) {
-							if (event.target.type === 'range') {
-								console.log('Range alterado:', event.target.id, 'Valor:', event.target.value);
-							}
 
-							if (event.target.type === 'checkbox') {
-								console.log('Opção alterado:', event.target.id, 'Valor:', event.target.value);
+							if (event.target.classList.contains('volume-control') &&  event.target.id.startsWith('id-sound-event-volume-')) {
+								updateSoundVolume( event );
+							}
+							
+							if (event.target.classList.contains('loop-checkbox') &&  event.target.id.startsWith('id-sound-event-loop-')) {
+								updateSoundLoop( event )
 							}
 						});
 

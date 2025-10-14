@@ -54,6 +54,15 @@ function getHtmlOfLoadConfigForm( ){
 			<div class="invalid-feedback">
 				Por favor, forneça um arquivo valido!.
 			</div>
+
+
+			<div class="alert alert-info mt-3 mb-0">
+				<small>
+					<i class="bi bi-info-circle"></i>
+					<strong>Importante:</strong> Se não houver nenhum arquivo de configuração criado anteriormente, ignore este pop-up e exporte um novo arquivo após adicionar os áudios a mesa de som.
+				</small>
+			</div>
+
 		</div>
 	
 		<div class="btn-group modal-footer mt-5 border-0" role="group">
@@ -78,19 +87,27 @@ function getHtmlOfSoundForm( action ){
 			</div>
 		</div>
 		
-		<div class="mb-4">
+		<div class="mb-4" id="id-ModelCard-sound-${action}-form-file-div" >
 			<label for="id-ModelCard-sound-${action}-form-file" class="form-label">Arquivo de Áudio <i class="bi bi-file-music"></i></label>
-			<input type="file" class="form-control" id="id-ModelCard-sound-${action}-form-file" accept="audio/*" required>
+			<input type="file" value="valor" class="form-control" id="id-ModelCard-sound-${action}-form-file" accept="audio/*" required>
 			<div class="invalid-feedback">
 				Por favor, forneça um arquivo valido!.
 			</div>
+
+			<div class="alert alert-info mt-3 mb-0">
+				<small>
+					<i class="bi bi-info-circle"></i> 
+					<strong>Importante:</strong> Coloque seus arquivos de áudio na pasta <code>sounds/</code> na raiz do projeto para que sejam carregados corretamente.
+				</small>
+			</div>
+
 		</div>
 		
 		<div class="mb-4">
 			<label for="id-ModelCard-sound-${action}-form-category" class="form-label">Categoria</label>
 			<select class="form-select" id="id-ModelCard-sound-${action}-form-category-options" required>
-				<option value="background">Trilha Sonora</option>
-				<option value="soundtrack">Sons Ambiente</option>
+				<option value="soundtrack">Trilha Sonora</option>
+				<option value="background">Sons Ambiente</option>
 				<option value="effects">Efeitos Sonoros</option>
 			</select>
 		</div>
