@@ -1,0 +1,125 @@
+{
+  "id_counter": 15,
+  "sounds": [
+    {
+      "id": 1,
+      "title": "Cidade Grande",
+      "sound": "Vida na cidade grande.mp3",
+      "category": "soundtrack",
+      "volume": "0.7",
+      "loop": true
+    },
+    {
+      "id": 2,
+      "title": "Combate Basico",
+      "sound": "The Blasted Heath (EXTENDED) - The Color of Madness - Darkest Dungeon OST.mp3",
+      "category": "soundtrack",
+      "volume": "0.7",
+      "loop": true
+    },
+    {
+      "id": 3,
+      "title": "Taiko",
+      "sound": "Taiko Music.mp3",
+      "category": "soundtrack",
+      "volume": "0.7",
+      "loop": true
+    },
+    {
+      "id": 4,
+      "title": "Chuva",
+      "sound": "Sleeping Rain Sounds - Heavy Rain & Thunder - 1 Hour Rain - ASMR Sleep.mp3",
+      "category": "background",
+      "volume": 0.43,
+      "loop": true
+    },
+    {
+      "id": 5,
+      "title": "Cidade Asiática",
+      "sound": "Ru Yang – Ancient Chinese Fantasy Music ｜ Epic Cinematic OST for Study, Writing, DnD, RPG.mp3",
+      "category": "soundtrack",
+      "volume": "0.7",
+      "loop": true
+    },
+    {
+      "id": 6,
+      "title": "Acampamento Rio",
+      "sound": "River Campsite - Relaxing Nature Sounds ｜ 2 Hours ⛺.mp3",
+      "category": "background",
+      "volume": "0.7",
+      "loop": true
+    },
+    {
+      "id": 7,
+      "title": "Local Mistérioso",
+      "sound": "mestério.mp3",
+      "category": "soundtrack",
+      "volume": 0.39,
+      "loop": true
+    },
+    {
+      "id": 8,
+      "title": "Floresta Densa",
+      "sound": "Forest Sounds ｜ Woodland Ambience, Bird Song.mp3",
+      "category": "background",
+      "volume": 0.11,
+      "loop": true
+    },
+    {
+      "id": 9,
+      "title": "Caverna",
+      "sound": "D&D Ambience - Damp Cave.mp3",
+      "category": "background",
+      "volume": "0.7",
+      "loop": true
+    },
+    {
+      "id": 10,
+      "title": "Taverna Lotada",
+      "sound": "D&D Ambience - Crowded Local Tavern.mp3",
+      "category": "background",
+      "volume": "0.7",
+      "loop": true
+    },
+    {
+      "id": 11,
+      "title": "Floresta Magica",
+      "sound": "423_Magical_Flora.mp3",
+      "category": "soundtrack",
+      "volume": "0.7",
+      "loop": true
+    },
+    {
+      "id": 12,
+      "title": "Vale Escondido",
+      "sound": "305_Hidden_Valley.mp3",
+      "category": "soundtrack",
+      "volume": "0.7",
+      "loop": true
+    },
+    {
+      "id": 13,
+      "title": "Cofre do Terror",
+      "sound": "252_Vault_of_Terror.mp3",
+      "category": "soundtrack",
+      "volume": "0.7",
+      "loop": true
+    },
+    {
+      "id": 14,
+      "title": "Alívio Cômico",
+      "sound": "51. Cheese ｜ RPG Funny Theme ｜ Sneaky Beaky Comical Music ｜ DnD.mp3",
+      "category": "soundtrack",
+      "volume": "0.7",
+      "loop": true
+    },
+    {
+      "id": 15,
+      "title": "Fogo",
+      "sound": "1 Hour of Relaxing Fire Sounds, Fireplace, Bonfire 🔥.mp3",
+      "category": "background",
+      "volume": 0.21,
+      "loop": true
+    }
+  ]
+}

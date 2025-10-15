@@ -2,64 +2,7 @@ function createAudioSystem(appState, refreshAllCards, updateCurrentlyPlaying) {
 	return {
 		instances: new Map(),
 		durations: new Map(),
-
-		// play(soundId) {
-		// 	const sound = filterSoundById(appState.config.sounds, soundId);
-			
-		// 	if (!sound) {
-		// 		console.error('Som não encontrado:', soundId);
-		// 		return;
-		// 	}
-			
-		// 	// Se já existe uma instância e está pausada, apenas retoma
-		// 	const existingAudio = this.instances.get(soundId);
-		// 	if (existingAudio && appState.playingSounds.get(soundId) === 'paused') {
-		// 		existingAudio.play().then(() => {
-		// 			appState.playingSounds.set(soundId, 'playing');
-		// 			refreshAllCards();
-		// 			updateCurrentlyPlaying();
-		// 		}).catch(error => {
-		// 			console.error('Erro ao retomar áudio:', error);
-		// 		});
-		// 		return;
-		// 	}
-			
-		// 	// Para qualquer instância anterior deste som
-		// 	this.stop(soundId);
-			
-		// 	// Cria nova instância
-		// 	const audio 	= new Audio(`sounds/${sound.sound}`);
-		// 	audio.volume	= sound.volume * appState.categoryVolumes[sound.category];
-		// 	audio.loop 	= sound.loop;
-			
-		// 	audio.play().then(() => {
-		// 		appState.playingSounds.set(soundId, 'playing');
-		// 		refreshAllCards();
-		// 		updateCurrentlyPlaying();
-		// 	}).catch(error => {
-		// 		console.error('Erro ao reproduzir áudio:', error);
-		// 		showErrorAlert(`Erro ao reproduzir "${sound.title}" - verifique se o arquivo existe na pasta sounds/`);
-		// 	});
-			
-		// 	this.instances.set(soundId, audio);
-			
-		// 	// Eventos para atualizar UI quando áudio terminar
-		// 	audio.onended = () => {
-		// 		if (!sound.loop) {
-		// 			appState.playingSounds.delete(soundId);
-		// 			refreshAllCards();
-		// 			updateCurrentlyPlaying();
-		// 		}
-		// 	};
-			
-		// 	audio.onpause = () => {
-		// 		if (appState.playingSounds.get(soundId) === 'playing') {
-		// 			appState.playingSounds.set(soundId, 'paused');
-		// 			refreshAllCards();
-		// 			updateCurrentlyPlaying();
-		// 		}
-		// 	};
-		// },
+		fadeIntervals: new Map(),
 
 		play(soundId) {
 			const sound = filterSoundById(appState.config.sounds, soundId);
@@ -69,9 +12,12 @@ function createAudioSystem(appState, refreshAllCards, updateCurrentlyPlaying) {
 				return;
 			}
 			
-			// Se já existe uma instância e está pausada, apenas retoma
+			// Se já existe uma instância e está pausada, apenas retoma com fade-in
 			const existingAudio = this.instances.get(soundId);
 			if (existingAudio && appState.playingSounds.get(soundId) === 'paused') {
+				const targetVolume = sound.volume * appState.categoryVolumes[sound.category];
+				this.applyFadeIn(existingAudio, targetVolume);
+				
 				existingAudio.play().then(() => {
 					appState.playingSounds.set(soundId, 'playing');
 					refreshAllCards();
@@ -87,8 +33,11 @@ function createAudioSystem(appState, refreshAllCards, updateCurrentlyPlaying) {
 			
 			// Cria nova instância
 			const audio = new Audio(`sounds/${sound.sound}`);
-			audio.volume = sound.volume * appState.categoryVolumes[sound.category];
+			const targetVolume = sound.volume * appState.categoryVolumes[sound.category];
 			audio.loop = sound.loop;
+			
+			// Aplica fade-in na reprodução
+			this.applyFadeIn(audio, targetVolume);
 			
 			// Quando os metadados são carregados (duração fica disponível)
 			audio.onloadedmetadata = () => {
@@ -128,63 +77,63 @@ function createAudioSystem(appState, refreshAllCards, updateCurrentlyPlaying) {
 				}
 			};
 		},	
-		
+
 		pause(soundId) {
 			const audio = this.instances.get(soundId);
 			if (audio && !audio.paused) {
-				audio.pause();
-				appState.playingSounds.set(soundId, 'paused');
-				refreshAllCards();
-				updateCurrentlyPlaying();
+				// Aplica fade-out antes de pausar
+				this.applyFadeOut(audio, 800, () => {
+					audio.pause();
+					appState.playingSounds.set(soundId, 'paused');
+					refreshAllCards();
+					updateCurrentlyPlaying();
+				});
 			}
 		},
 
 		stop(soundId) {
 			const audio = this.instances.get(soundId);
 			if (audio) {
-				audio.pause();
-				audio.currentTime = 0;
-				this.instances.delete(soundId);
-			}
+				// Aplica fade-out antes de parar completamente
+				this.applyFadeOut(audio, 800, () => {
+					audio.pause();
+					audio.currentTime = 0;
+					this.instances.delete(soundId);
 
-
-			const progressElement = document.getElementById(`id-sound-progress-${soundId}`);
-			const timeElement = document.getElementById(`id-sound-time-${soundId}`);
-			if (progressElement) progressElement.value = 0;
-			if (timeElement) timeElement.textContent = '0:00 / 0:00';
-	
-			appState.playingSounds.delete(soundId);
-			refreshAllCards();
-			updateCurrentlyPlaying();
-		},
+					const progressElement = document.getElementById(`id-sound-progress-${soundId}`);
+					const timeElement = document.getElementById(`id-sound-time-${soundId}`);
+					if (progressElement) progressElement.value = 0;
+					if (timeElement) timeElement.textContent = '0:00 / 0:00';
+			
+					appState.playingSounds.delete(soundId);
+					refreshAllCards();
+					updateCurrentlyPlaying();
+				});
+			} else {
+				// Se não há áudio, apenas limpa o estado
+				const progressElement = document.getElementById(`id-sound-progress-${soundId}`);
+				const timeElement = document.getElementById(`id-sound-time-${soundId}`);
+				if (progressElement) progressElement.value = 0;
+				if (timeElement) timeElement.textContent = '0:00 / 0:00';
 		
-		setVolume(soundId, volume) {
-			const audio = this.instances.get(soundId);
-			if ( audio ) {
-				const sound = filterSoundById(appState.config.sounds, soundId);
-				audio.volume = volume * appState.categoryVolumes[sound.category];
-				
-				sound.volume = volume;
+				appState.playingSounds.delete(soundId);
+				refreshAllCards();
+				updateCurrentlyPlaying();
 			}
 		},
 		
 		// Controles em massa
 		playAll() {
-			// Pega apenas os sons que estão no estado 'paused' ou no mapa de playingSounds
 			const soundsToPlay = Array.from(appState.playingSounds.entries()).filter(([_, state]) => state === 'paused').map(([soundId]) => soundId);
 			
-
-			// Se há sons pausados, apenas retoma eles
 			if( soundsToPlay.length ){
 				soundsToPlay.forEach(soundId => {
 					this.play(soundId);
 				});
-				
 			}
 		},
 
 		pauseAll() {
-			// Pausa apenas os sons que estão tocando
 			this.instances.forEach((audio, soundId) => {
 				if (!audio.paused && appState.playingSounds.get(soundId) === 'playing') {
 					this.pause(soundId);
@@ -193,7 +142,6 @@ function createAudioSystem(appState, refreshAllCards, updateCurrentlyPlaying) {
 		},
 
 		stopAll() {
-			// Para apenas os sons que estão tocando ou pausados
 			const soundsToStop = Array.from(appState.playingSounds.keys());
 			soundsToStop.forEach(soundId => {
 				this.stop(soundId);
@@ -201,7 +149,6 @@ function createAudioSystem(appState, refreshAllCards, updateCurrentlyPlaying) {
 		},
 			
 		updateProgress(soundId, currentTime, duration) {
-			// Atualiza progresso nos cards
 			const progressElement = document.getElementById(`id-sound-progress-${soundId}`);
 			const timeElement = document.getElementById(`id-sound-time-${soundId}`);
 			
@@ -216,7 +163,6 @@ function createAudioSystem(appState, refreshAllCards, updateCurrentlyPlaying) {
 				}
 			}
 		
-			// Atualiza progresso no painel "Faixas Tocando"
 			const trackProgressElement = document.getElementById(`id-track-progress-${soundId}`);
 			const trackTimeElement = document.getElementById(`id-track-time-${soundId}`);
 		
@@ -239,7 +185,15 @@ function createAudioSystem(appState, refreshAllCards, updateCurrentlyPlaying) {
 			return `${mins}:${secs.toString().padStart(2, '0')}`;
 		},
 
-
+		setVolume(soundId, volume) {
+			const audio = this.instances.get(soundId);
+			if ( audio ) {
+				const sound = filterSoundById(appState.config.sounds, soundId);
+				audio.volume = volume * appState.categoryVolumes[sound.category];
+				
+				sound.volume = volume;
+			}
+		},
 
 		// Atualizar volume por categoria
 		updateCategoryVolume(category, volume) {
@@ -252,6 +206,80 @@ function createAudioSystem(appState, refreshAllCards, updateCurrentlyPlaying) {
 						audio.volume = sound.volume * volume;
 				}
 			});
+		},
+
+		applyFadeIn(audio, targetVolume, duration = 1000) {
+			const initialVolume = 0;
+			audio.volume = initialVolume;
+			
+			const steps = 20;
+			const stepTime = duration / steps;
+			const volumeStep = targetVolume / steps;
+			
+			let currentStep = 0;
+			
+			// Limpa qualquer fade anterior
+			if (this.fadeIntervals.has(audio)) {
+				clearInterval(this.fadeIntervals.get(audio));
+			}
+			
+			const fadeInterval = setInterval(() => {
+				currentStep++;
+				const newVolume = initialVolume + (volumeStep * currentStep);
+				
+				if (newVolume >= targetVolume || currentStep >= steps) {
+					audio.volume = targetVolume;
+					clearInterval(fadeInterval);
+					this.fadeIntervals.delete(audio);
+				} else {
+					audio.volume = newVolume;
+				}
+			}, stepTime);
+			
+			this.fadeIntervals.set(audio, fadeInterval);
+		},
+
+		applyFadeOut(audio, duration = 1000, onComplete = null) {
+			const initialVolume = audio.volume;
+			
+			const steps = 20;
+			const stepTime = duration / steps;
+			const volumeStep = initialVolume / steps;
+			
+			let currentStep = 0;
+			
+			// Limpa qualquer fade anterior
+			if (this.fadeIntervals.has(audio)) {
+				clearInterval(this.fadeIntervals.get(audio));
+			}
+			
+			const fadeInterval = setInterval(() => {
+				currentStep++;
+				const newVolume = initialVolume - (volumeStep * currentStep);
+				
+				if (newVolume <= 0 || currentStep >= steps) {
+					audio.volume = 0;
+					clearInterval(fadeInterval);
+					this.fadeIntervals.delete(audio);
+					
+					if (onComplete) {
+						onComplete();
+					}
+				} else {
+					audio.volume = newVolume;
+				}
+			}, stepTime);
+			
+			this.fadeIntervals.set(audio, fadeInterval);
+		},
+
+		cleanup() {
+			this.fadeIntervals.forEach((interval, audio) => {
+				clearInterval(interval);
+			});
+			this.fadeIntervals.clear();
 		}
+
+
 	};
 }
