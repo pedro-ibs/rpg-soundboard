@@ -158,3 +158,21 @@ function updateCurrentlyPlaying() {
 
 	container.innerHTML = html;
 }
+
+
+function rendeCategory( target_id, content_id, title ){
+	const html = `<div id="id-content-category-${content_id}" class="mb-5">
+		<div class="category border-bottom d-flex justify-content-between">
+			<h3 class="category-title m-2" >${title}</h3>
+			<div class="d-flex align-self-start m-2">
+				<i class="bi bi-volume-up-fill m-2"></i>
+				<input type="range" class="volume-control m-2" min="0" max="1" step="0.01" value="1.00" id="id-category-event-volume-${content_id}">
+			</div>
+		</div>
+		<div class="row d-flex flex-md-row flex-sm-column justify-content-center align-items-center mt-3" id="id-content-category-${content_id}-cards">
+			<!-- onde os cards devem ser rinderizados -->
+		</div>
+	</div>`;
+
+	document.getElementById(target_id).innerHTML += html;
+}

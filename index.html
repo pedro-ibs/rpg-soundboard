@@ -85,45 +85,6 @@
 
 			<section class="category  mb-5 mt-5 pt-5" id="id-content">
 
-				<div id="id-content-category-soundtrack" class="mb-5">
-					<div class="category border-bottom d-flex justify-content-between">
-						<h3 class="category-title m-2" >Trilha Sonora</h3>
-						<div class="d-flex align-self-start m-2">
-							<i class="bi bi-volume-up-fill m-2"></i>
-							<input type="range" class="volume-control m-2" min="0" max="1" step="0.01" value="1.00" id="id-category-event-volume-soundtrack">
-						</div>
-					</div>
-					<div class="row d-flex flex-md-row flex-sm-column justify-content-center align-items-center mt-3" id="id-content-category-soundtrack-cards">
-						<!-- onde os cards devem ser rinderizados -->
-					</div>
-				</div>
-
-				<div id="id-content-category-background" class="mb-5">
-					<div class="category border-bottom d-flex justify-content-between">
-						<h3 class="category-title m-2" >Sons Ambiente</h3>
-						<div class="d-flex align-self-start  m-2">
-							<i class="bi bi-volume-up-fill m-2"></i>
-							<input type="range" class="volume-control m-2" min="0" max="1" step="0.01" value="1.00" id="id-category-event-volume-background">
-						</div>
-					</div>
-					<div class="row d-flex flex-md-row flex-sm-column justify-content-center align-items-center mt-3" id="id-content-category-background-cards">
-						<!-- onde os cards devem ser rinderizados -->
-					</div>
-				</div>
-
-				<div id="id-content-category-effects" class="mb-5">
-					<div class="category border-bottom d-flex justify-content-between">
-						<h3 class="category-title m-2" >Efeitos Sonoros</h3>
-						<div class="d-flex align-self-start m-2">
-							<i class="bi bi-volume-up-fill m-2"></i>
-							<input type="range" class="volume-control m-2" min="0" max="1" step="0.01" value="1.00" id="id-category-event-volume-effects">
-						</div>
-					</div>
-					<div class="row d-flex flex-md-row flex-sm-column justify-content-center align-items-center mt-3" id="id-content-category-effects-cards">
-						<!-- onde os cards devem ser rinderizados -->
-					</div>
-				</div>
-
 			</section>
 
 			
@@ -149,24 +110,29 @@
 				<script>
 					document.addEventListener('DOMContentLoaded', function() {
 
+						const categoryOptions = [
+							{ name: 'Trilha Sonora',	value: 'soundtrack',	container: 'id-content-category-soundtrack-cards'	},
+							{ name: 'Sons Ambiente',	value: 'background',	container: 'id-content-category-background-cards'	},
+							{ name: 'Efeitos Sonoros',	value: 'effects',	container: 'id-content-category-effects-cards'		},
+							{ name: 'Outros',		value: 'others',	container: 'id-content-category-others-cards'		},
+						];
+
 						let appState = {
 							playingSounds: new Map(),
 							
 							config: validateConfigurationFile( null ),
 
-							categoryVolumes: {
-								soundtrack: 1.0,
-								background: 1.0,
-								effects: 1.0
-							}
+							categoryVolumes: { }
 						};
 
-						
+						categoryOptions.forEach(option => {
+							appState.categoryVolumes[option.value] = 1.0;
+						});
 
 						function refreshAllCards() {
-							renderCard('id-content-category-soundtrack-cards',	filterSoundByCategory( appState.config.sounds, 'soundtrack'	), appState );
-							renderCard('id-content-category-background-cards',	filterSoundByCategory( appState.config.sounds, 'background'	), appState );
-							renderCard('id-content-category-effects-cards', 	filterSoundByCategory( appState.config.sounds, 'effects'	), appState );
+							categoryOptions.forEach(option => {
+								renderCard(option.container,	filterSoundByCategory( appState.config.sounds, option.value	), appState );
+							});
 
 							updateCurrentlyPlaying()
 						}
@@ -184,26 +150,6 @@
 							playingSounds.forEach(([soundId, state]) => {
 								const sound = filterSoundById(appState.config.sounds, soundId);
 								if (sound) {
-									// html += `<div class="track-item">
-									// 	<span>${sound.title}</span>
-									// 	<div class="track-controls">
-									// 		<span class="badge ${state === 'playing' ? 'bg-success' : 'bg-warning'}">
-									// 			${state === 'playing' ? '<i class="bi bi-play"></i>' : '<i class="bi bi-pause"></i>'}
-									// 		</span>
-									// 	</div>
-									// </div>`;
-
-
-									// html += `<div class="track-item">
-									// 	<span>${sound.title}</span>
-									// 	<div class="track-controls">
-									// 		<span class="badge ${state === 'playing' ? 'bg-success' : 'bg-info'}">
-									// 			${state === 'playing' ? '<i class="bi bi-play"></i>' : '<i class="bi bi-pause"></i>'}
-									// 		</span>
-									// 	</div>
-									// </div>`
-
-
 									html += `<div class="track-item">
 										<span>${sound.title}</span>
 										<div class="track-controls">
@@ -220,17 +166,6 @@
 											</div>
 										</div>
 									</div>`
-
-
-									// html += `<div class="track-item d-flex align-items-center justify-content-between">
-									// 		<div class="fw-bold">${sound.title}</div>
-									// 		<progress class="form-range mx-3" id="id-track-progress-${soundId}" value="0" max="100" style="width: 70%; height: 6px;"></progress>
-									// 	<div class="track-controls d-flex align-items-center">
-									// 		<span class="badge ${state === 'playing' ? 'bg-success' : 'bg-info'}">
-									// 			${state === 'playing' ? '<i class="bi bi-play"></i>' : '<i class="bi bi-pause"></i>'}
-									// 		</span>
-									// 	</div>
-									// </div>`;
 								}
 							});
 
@@ -440,14 +375,21 @@
 							}
 						}
 
+						htmlOptions = getHtmlCategoryOptions( categoryOptions );
 
-						renderModelCard( 'id-ModelCard', 'id-ModelCard-config',			'Carregar Arquivo Configurações',	getHtmlOfLoadConfigForm()	);
-						renderModelCard( 'id-ModelCard', 'id-ModelCard-sound-create',		'Adicionar Nova Som ou Musica', 	getHtmlOfSoundForm('create')	);
-						renderModelCard( 'id-ModelCard', 'id-ModelCard-sound-update',		'Adicionar Nova Som ou Musica', 	getHtmlOfSoundForm('update')	);
+						renderModelCard( 'id-ModelCard', 'id-ModelCard-config',			'Carregar Arquivo Configurações',	getHtmlOfLoadConfigForm()			);
+						renderModelCard( 'id-ModelCard', 'id-ModelCard-sound-create',		'Adicionar Nova Som ou Musica', 	getHtmlOfSoundForm('create', htmlOptions)	);
+						renderModelCard( 'id-ModelCard', 'id-ModelCard-sound-update',		'Adicionar Nova Som ou Musica', 	getHtmlOfSoundForm('update', htmlOptions)	);
 
 						formListener( 'id-ModelCard-config-form',	callbackConfigForm		);
 						formListener( 'id-ModelCard-sound-create-form',	callbackSoundCreateForm		);
 						formListener( 'id-ModelCard-sound-update-form',	callbackSoundUpdateForm		);
+
+
+						categoryOptions.forEach(option => {
+							rendeCategory('id-content', option.value, option.name );
+						});
+
 
 						formVal();
 
@@ -462,19 +404,11 @@
 						document.getElementById('id-sound-event-stop-all').addEventListener('click', () => audioSystem.stopAll());
 
 
-						document.getElementById('id-category-event-volume-soundtrack').addEventListener('input', (e) => {
-							audioSystem.updateCategoryVolume('soundtrack', parseFloat(e.target.value));
+						categoryOptions.forEach(option => {
+							document.getElementById(`id-category-event-volume-${option.value}`).addEventListener('input', (e) => {
+								audioSystem.updateCategoryVolume(option.value, parseFloat(e.target.value));
+							});
 						});
-
-						document.getElementById('id-category-event-volume-background').addEventListener('input', (e) => {
-							audioSystem.updateCategoryVolume('background', parseFloat(e.target.value));
-						});
-
-						document.getElementById('id-category-event-volume-effects').addEventListener('input', (e) => {
-							audioSystem.updateCategoryVolume('effects', parseFloat(e.target.value));
-						});
-
-
 
 						document.body.addEventListener('click', function(event) {
 

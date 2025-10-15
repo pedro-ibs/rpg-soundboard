@@ -73,7 +73,18 @@ function getHtmlOfLoadConfigForm( ){
 	return html;
 }
 
-function getHtmlOfSoundForm( action ){
+function getHtmlCategoryOptions( options ){
+	html = '';
+
+	options.forEach(element => {
+		html += `<option value="${element.value}">${element.name}</option>`
+	});
+
+	return html;
+
+}
+
+function getHtmlOfSoundForm( action, htmlCategoryOptions ){
 
 	const html = `<form id="id-ModelCard-sound-${action}-form" class="needs-validation", novalidate>
 		
@@ -106,9 +117,7 @@ function getHtmlOfSoundForm( action ){
 		<div class="mb-4">
 			<label for="id-ModelCard-sound-${action}-form-category" class="form-label">Categoria</label>
 			<select class="form-select" id="id-ModelCard-sound-${action}-form-category-options" required>
-				<option value="soundtrack">Trilha Sonora</option>
-				<option value="background">Sons Ambiente</option>
-				<option value="effects">Efeitos Sonoros</option>
+				${htmlCategoryOptions}
 			</select>
 		</div>
 

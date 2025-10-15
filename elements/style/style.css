@@ -221,7 +221,6 @@ progress::-moz-progress-bar {
 	border-radius: 10px;
 }
 
-/* Tempo da música */
 .audio-progress small {
 	font-size: 0.75rem;
 	color: #8fa3c2;
@@ -229,11 +228,9 @@ progress::-moz-progress-bar {
 
 
 .track-controls .badge.bg-warning {
-    background-color: #17a2b8 !important;
-    /* Ou use #138496 para combinar com o hover */
+	background-color: #17a2b8 !important;
 }
 
-/* Se preferir, pode criar uma classe específica */
 .track-controls .badge.bg-paused {
-    background-color: #17a2b8 !important;
+	background-color: #17a2b8 !important;
 }
