@@ -128,14 +128,13 @@ function buildCard( sound, html_body, appState ){
 }
 
 
-function renderCard( container_id, sound_array, appState ){
-
-	const container = document.getElementById( container_id );
-	container.innerHTML = "";
-
-	sound_array.forEach(sound => {
-		container.innerHTML = container.innerHTML + buildCard(sound, buildCardBody(sound), appState );
-	});
+function renderCard(container_id, sound_array, appState) {
+	const container = document.getElementById(container_id);
+	const cardsHTML = sound_array.map(sound => 
+		buildCard(sound, buildCardBody(sound), appState)
+	).join('');
+	
+	container.innerHTML = cardsHTML;
 }
 
 

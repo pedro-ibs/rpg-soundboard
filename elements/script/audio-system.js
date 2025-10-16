@@ -427,36 +427,6 @@ function createAudioSystem(appState, refreshAllCards, updateCurrentlyPlaying) {
 		},
 
 
-		updateProgress(soundId, currentTime, duration) {
-			const progressElement	= document.getElementById(`id-sound-progress-${soundId}`);
-			const timeElement 	= document.getElementById(`id-sound-time-${soundId}`);
-			
-			if (progressElement && duration > 0) {
-				const progress		= (currentTime / duration) * 100;
-				progressElement.value	= progress;
-				
-				if (timeElement) {
-					const currentTimeFormatted	= this.formatTime(currentTime);
-					const durationFormatted		= this.formatTime(duration);
-					timeElement.textContent		= `${currentTimeFormatted} / ${durationFormatted}`;
-				}
-			}
-		
-			const trackProgressElement	= document.getElementById(`id-track-progress-${soundId}`);
-			const trackTimeElement		= document.getElementById(`id-track-time-${soundId}`);
-		
-			if (trackProgressElement && duration > 0) {
-				const progress = (currentTime / duration) * 100;
-				trackProgressElement.value = progress;
-				
-				if (trackTimeElement) {
-					const currentTimeFormatted	= this.formatTime(currentTime);
-					const durationFormatted		= this.formatTime(duration);
-					trackTimeElement.textContent	= `${currentTimeFormatted} / ${durationFormatted}`;
-				}
-			}
-		},
-
 		formatTime(seconds) {
 			const mins = Math.floor(seconds / 60);
 			const secs = Math.floor(seconds % 60);
@@ -568,10 +538,16 @@ function createAudioSystem(appState, refreshAllCards, updateCurrentlyPlaying) {
 		},
 
 		cleanup() {
-			this.fadeIntervals.forEach((interval, audio) => {
-				clearInterval(interval);
-			});
+			this.fadeIntervals.forEach((interval) => clearInterval(interval));
 			this.fadeIntervals.clear();
+			
+			// Parar todas as instâncias de áudio
+			this.instances.forEach((audio, soundId) => {
+				audio.pause();
+				audio.src = '';
+				audio.load();
+			});
+			this.instances.clear();
 		}
 
 
