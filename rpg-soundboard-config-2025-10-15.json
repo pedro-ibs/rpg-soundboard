@@ -1,5 +1,5 @@
 {
-  "id_counter": 15,
+  "id_counter": 16,
   "sounds": [
     {
       "id": 1,
@@ -7,7 +7,8 @@
       "sound": "Vida na cidade grande.mp3",
       "category": "soundtrack",
       "volume": "0.7",
-      "loop": true
+      "loop": true,
+      "playlist": false
     },
     {
       "id": 2,
@@ -15,7 +16,8 @@
       "sound": "The Blasted Heath (EXTENDED) - The Color of Madness - Darkest Dungeon OST.mp3",
       "category": "soundtrack",
       "volume": "0.7",
-      "loop": true
+      "loop": true,
+      "playlist": false
     },
     {
       "id": 3,
@@ -23,7 +25,8 @@
       "sound": "Taiko Music.mp3",
       "category": "soundtrack",
       "volume": "0.7",
-      "loop": true
+      "loop": true,
+      "playlist": false
     },
     {
       "id": 4,
@@ -31,7 +34,8 @@
       "sound": "Sleeping Rain Sounds - Heavy Rain & Thunder - 1 Hour Rain - ASMR Sleep.mp3",
       "category": "background",
       "volume": 0.43,
-      "loop": true
+      "loop": true,
+      "playlist": false
     },
     {
       "id": 5,
@@ -39,7 +43,8 @@
       "sound": "Ru Yang – Ancient Chinese Fantasy Music ｜ Epic Cinematic OST for Study, Writing, DnD, RPG.mp3",
       "category": "soundtrack",
       "volume": "0.7",
-      "loop": true
+      "loop": true,
+      "playlist": false
     },
     {
       "id": 6,
@@ -47,7 +52,8 @@
       "sound": "River Campsite - Relaxing Nature Sounds ｜ 2 Hours ⛺.mp3",
       "category": "background",
       "volume": "0.7",
-      "loop": true
+      "loop": true,
+      "playlist": false
     },
     {
       "id": 7,
@@ -55,7 +61,8 @@
       "sound": "mestério.mp3",
       "category": "soundtrack",
       "volume": 0.39,
-      "loop": true
+      "loop": true,
+      "playlist": false
     },
     {
       "id": 8,
@@ -63,7 +70,8 @@
       "sound": "Forest Sounds ｜ Woodland Ambience, Bird Song.mp3",
       "category": "background",
       "volume": 0.11,
-      "loop": true
+      "loop": true,
+      "playlist": false
     },
     {
       "id": 9,
@@ -71,7 +79,8 @@
       "sound": "D&D Ambience - Damp Cave.mp3",
       "category": "background",
       "volume": "0.7",
-      "loop": true
+      "loop": true,
+      "playlist": false
     },
     {
       "id": 10,
@@ -79,7 +88,8 @@
       "sound": "D&D Ambience - Crowded Local Tavern.mp3",
       "category": "background",
       "volume": "0.7",
-      "loop": true
+      "loop": true,
+      "playlist": false
     },
     {
       "id": 11,
@@ -87,7 +97,8 @@
       "sound": "423_Magical_Flora.mp3",
       "category": "soundtrack",
       "volume": "0.7",
-      "loop": true
+      "loop": true,
+      "playlist": false
     },
     {
       "id": 12,
@@ -95,7 +106,8 @@
       "sound": "305_Hidden_Valley.mp3",
       "category": "soundtrack",
       "volume": "0.7",
-      "loop": true
+      "loop": true,
+      "playlist": false
     },
     {
       "id": 13,
@@ -103,7 +115,8 @@
       "sound": "252_Vault_of_Terror.mp3",
       "category": "soundtrack",
       "volume": "0.7",
-      "loop": true
+      "loop": true,
+      "playlist": false
     },
     {
       "id": 14,
@@ -111,7 +124,8 @@
       "sound": "51. Cheese ｜ RPG Funny Theme ｜ Sneaky Beaky Comical Music ｜ DnD.mp3",
       "category": "soundtrack",
       "volume": "0.7",
-      "loop": true
+      "loop": true,
+      "playlist": false
     },
     {
       "id": 15,
@@ -119,7 +133,17 @@
       "sound": "1 Hour of Relaxing Fire Sounds, Fireplace, Bonfire 🔥.mp3",
       "category": "background",
       "volume": 0.21,
-      "loop": true
+      "loop": true,
+      "playlist": false
+    },
+    {
+      "id": 16,
+      "title": "Efeito",
+      "sound": "efeito.mp3",
+      "category": "effects",
+      "volume": "0.7",
+      "loop": false,
+      "playlist": false
     }
   ]
 }

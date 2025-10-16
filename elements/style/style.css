@@ -178,6 +178,35 @@ body {
 	border-left: 5px solid #0f3460 !important;
 }
 
+
+.music-card.playlist-active {
+	/* border-top: 3px solid #ffc107 !important; */
+	box-shadow: 0 0 10px rgba(255, 193, 7, 0.3) !important;
+}
+
+.music-card.playlist-current {
+	/* border-top: 3px solid #ffc107 !important; */
+	/* border-bottom: 3px solid #ffc107 !important; */
+	box-shadow: 0 0 15px rgba(255, 193, 7, 0.6) !important;
+	background-color: #1a4a7a !important;
+}
+
+.music-card.playlist-active .bi-music-note-list {
+	color: #ffc107 !important;
+}
+
+.music-card.playlist-current .bi-music-note-list {
+	color: #ffc107 !important;
+	animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+	0% { opacity: 1; }
+	50% { opacity: 0.5; }
+	100% { opacity: 1; }
+}
+
+
 /* Badges para a lista de tocando agora */
 .badge.bg-success, .badge.bg-warning {
 	font-size: 0.7em;

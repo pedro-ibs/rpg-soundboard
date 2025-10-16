@@ -64,3 +64,8 @@ function updateSoundById(sounds, id, updates) {
 
 	return false;
 }
+
+
+function getAudioState(appState, soundId) {
+	return appState.playingSounds.get(soundId) || appState.playingSounds.get(String(soundId)) || appState.playingSounds.get(Number(soundId));
+}

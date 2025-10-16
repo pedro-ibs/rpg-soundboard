@@ -68,16 +68,23 @@
 					
 					<div class="btn-group control-buttons mt-2" role="group">
 						<button class="btn btn-sm btn-success" id="id-sound-event-play-all">
-							<i class="bi bi-play"></i> Continuar Todas
+							<i class="bi bi-play"></i> <i class="bi bi-music-note"></i>
 						</button>
-		
+
+						<button class="btn btn-sm btn-success" id="id-sound-event-play-playlist">
+							<i class="bi bi-play"></i> <i class="bi bi-music-note-list"></i>
+						</button>
+
 						<button class="btn btn-sm btn-info" id="id-sound-event-pause-all">
-							<i class="bi bi-pause"></i> Pausar Todas
+							<i class="bi bi-pause"></i> <i class="bi bi-music-note"></i>
 						</button>
-						
+
+						<button class="btn btn-sm btn-info" id="id-sound-event-next-playlist">
+							<i class="bi bi-fast-forward"></i></i> <i class="bi bi-music-note-list"></i>
+						</button>
 						
 						<button class="btn btn-sm btn-danger" id="id-sound-event-stop-all">
-							<i class="bi bi-stop"></i> Parar Todas
+							<i class="bi bi-stop"></i> <i class="bi bi-music-note"></i>
 						</button>
 					</div>
 				</section>
@@ -86,9 +93,6 @@
 			<section class="category  mb-5 mt-5 pt-5" id="id-content">
 
 			</section>
-
-			
-
 		</div>
 
 		<div id="id-hidden">
@@ -258,7 +262,8 @@
 								sound:		file,
 								category:	category,
 								volume:		volume,
-								loop:		loop
+								loop:		loop,
+								playlist:	false
 							};
 
 							appState.config.id_counter = sound.id;
@@ -328,7 +333,6 @@
 
 
 							showModelCard( 'id-ModelCard-sound-update' );
-
 						}
 
 						function removeCard( target_id ){
@@ -366,13 +370,26 @@
 							const sound = filterSoundById(appState.config.sounds, soundId);
 							if (sound) {
 								sound.loop = loop;
-							
-								// Atualiza a instância de áudio se existir
+
 								const audio = audioSystem.instances.get(soundId);
 								if (audio) {
 									audio.loop = loop;
 								}
 							}
+						}
+
+						function updateSoundPlaylist( event ){
+							const soundId = event.target.id.split('-').at(-1);
+							const playlist = event.target.checked;
+							
+							const sound = filterSoundById(appState.config.sounds, soundId);
+							if (sound) {
+								sound.playlist = playlist;
+								audioSystem.aadSoundInPlaylist(soundId, playlist);
+							}
+
+							// gambiarra
+							audioSystem.refresIhm();
 						}
 
 						htmlOptions = getHtmlCategoryOptions( categoryOptions );
@@ -398,11 +415,12 @@
 						document.getElementById('menu-import-config').addEventListener('click', function() { showModelCard( 'id-ModelCard-config'					) });
 						document.getElementById('menu-export-config').addEventListener('click', function() { exportConfiguration( 'rpg-soundboard-config', appState.config		) });
 						document.getElementById( `id-ModelCard-sound-update-form-file` ).remove();
-
+			
 						document.getElementById('id-sound-event-play-all').addEventListener('click', () => audioSystem.playAll());
 						document.getElementById('id-sound-event-pause-all').addEventListener('click', () => audioSystem.pauseAll());
-						document.getElementById('id-sound-event-stop-all').addEventListener('click', () => audioSystem.stopAll());
-
+						document.getElementById('id-sound-event-stop-all').addEventListener('click', function() { audioSystem.stopAll(); audioSystem.stopPlaylist() });
+						document.getElementById('id-sound-event-play-playlist').addEventListener('click', () => audioSystem.playPlaylist());
+						document.getElementById('id-sound-event-next-playlist').addEventListener('click', () => audioSystem.nextInPlaylist());
 
 						categoryOptions.forEach(option => {
 							document.getElementById(`id-category-event-volume-${option.value}`).addEventListener('input', (e) => {
@@ -413,8 +431,8 @@
 						document.body.addEventListener('click', function(event) {
 
 							// console.log('Click detectado no elemento:', event.target);
-							console.log('ID do elemento:', event.target.id);
-							console.log('Tag do elemento:', event.target.tagName);
+							// console.log('ID do elemento:', event.target.id);
+							// console.log('Tag do elemento:', event.target.tagName);
 
 
 							// Encontra o elemento botão (pode ser o próprio ou um pai)
@@ -450,7 +468,6 @@
 							}
 						});
 
-
 						document.body.addEventListener('input', function(event) {
 
 							if (event.target.classList.contains('volume-control') &&  event.target.id.startsWith('id-sound-event-volume-')) {
@@ -460,6 +477,12 @@
 							if (event.target.classList.contains('loop-checkbox') &&  event.target.id.startsWith('id-sound-event-loop-')) {
 								updateSoundLoop( event )
 							}
+
+							if (event.target.classList.contains('loop-checkbox') && event.target.id.startsWith('id-sound-event-playlist-')) {
+								updateSoundPlaylist(event);
+							}
+
+
 						});
 
 					});

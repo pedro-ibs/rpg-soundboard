@@ -66,6 +66,7 @@ function getHtmlOfLoadConfigForm( ){
 		</div>
 	
 		<div class="btn-group modal-footer mt-5 border-0" role="group">
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ignorar</button>
 			<button type="submit" class="btn btn-primary" id="id-ModelCard-config-form-save">Carregar Arquivo</button>
 		</div>
 	</form>`;
