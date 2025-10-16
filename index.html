@@ -62,8 +62,30 @@
 					<h4><i class="bi bi-music-note-beamed"></i> Faixas Tocando:</h4>
 			
 					<div id="current-tracks" class="playing-tracks">
-						<p class="mb-0">Nenhuma faixa tocando</p>
-
+						<div class="alert alert-success mt-3 mb-0">
+							<small class="info-user">
+								<i class="bi bi-info-circle"></i> 
+								<strong>Como usar a Mesa de Som:</strong><br>
+								
+								Para começar, adicione áudios usando o botão "Adicionar Novo Som ou Música". Uma vez adicionados, você pode controlar cada áudio individualmente através dos botões 
+								<button class="btn btn-sm btn-success"><i class="bi bi-play"></i></button> para reproduzir, 
+								<button class="btn btn-sm btn-info"><i class="bi bi-pause"></i></button> para pausar e 
+								<button class="btn btn-sm btn-danger"><i class="bi bi-stop"></i></button> para parar completamente. 
+								
+								Para reprodução contínua, marque o ícone <i class="bi bi-repeat"></i> para ativar o loop (que será ignorado se áudio fizer parte de uma playlist).
+								
+								Para gerenciar múltiplos áudios simultaneamente, utilize os controles em massa na seção "Faixas Tocando": 
+								<button class="btn btn-sm btn-success"><i class="bi bi-play"></i> <i class="bi bi-music-note"></i></button> retoma todos os áudios pausados, 
+								<button class="btn btn-sm btn-info"><i class="bi bi-pause"></i> <i class="bi bi-music-note"></i></button> pausa todos que estão tocando e 
+								<button class="btn btn-sm btn-danger"><i class="bi bi-stop"></i> <i class="bi bi-music-note"></i></button> para tudo completamente. 
+								
+								Para criar sequências musicais automáticas (playlist), marque o ícone <i class="bi bi-music-note-list"></i> nos cards desejados e use 
+								<button class="btn btn-sm btn-success"><i class="bi bi-play"></i> <i class="bi bi-music-note-list"></i></button> para iniciar a playlist e 
+								<button class="btn btn-sm btn-info"><i class="bi bi-fast-forward"></i> <i class="bi bi-music-note-list"></i></button> para pular para a próxima música.
+								
+								<strong>Importante:</strong> Para o funcionamento correto da playlist, os áudios incluídos devem ter o loop <i class="bi bi-repeat"></i> ativado, caso contrário, quando a música terminar a playlist será pausada.
+							</small>
+						</div>
 					</div>
 					
 					<div class="btn-group control-buttons mt-2" role="group">
@@ -146,7 +168,31 @@
 							const playingSounds = Array.from(appState.playingSounds.entries()).filter(([_, state]) => state === 'playing' || state === 'paused');
 								
 							if (playingSounds.length === 0) {
-								container.innerHTML = '<p class="mb-0 text-muted">Nenhuma faixa tocando</p>';
+								container.innerHTML =`<div class="alert alert-success mt-3 mb-0">
+									<small class="info-user">
+										<i class="bi bi-info-circle"></i> 
+										<strong>Como usar a Mesa de Som:</strong><br>
+										
+										Para começar, adicione áudios usando o botão "Adicionar Novo Som ou Música". Uma vez adicionados, você pode controlar cada áudio individualmente através dos botões 
+										<button class="btn btn-sm btn-success"><i class="bi bi-play"></i></button> para reproduzir, 
+										<button class="btn btn-sm btn-info"><i class="bi bi-pause"></i></button> para pausar e 
+										<button class="btn btn-sm btn-danger"><i class="bi bi-stop"></i></button> para parar completamente. 
+										
+										Para reprodução contínua, marque o ícone <i class="bi bi-repeat"></i> para ativar o loop (que será ignorado se áudio fizer parte de uma playlist).
+										
+										Para gerenciar múltiplos áudios simultaneamente, utilize os controles em massa na seção "Faixas Tocando": 
+										<button class="btn btn-sm btn-success"><i class="bi bi-play"></i> <i class="bi bi-music-note"></i></button> retoma todos os áudios pausados, 
+										<button class="btn btn-sm btn-info"><i class="bi bi-pause"></i> <i class="bi bi-music-note"></i></button> pausa todos que estão tocando e 
+										<button class="btn btn-sm btn-danger"><i class="bi bi-stop"></i> <i class="bi bi-music-note"></i></button> para tudo completamente. 
+										
+										Para criar sequências musicais automáticas (playlist), marque o ícone <i class="bi bi-music-note-list"></i> nos cards desejados e use 
+										<button class="btn btn-sm btn-success"><i class="bi bi-play"></i> <i class="bi bi-music-note-list"></i></button> para iniciar a playlist e 
+										<button class="btn btn-sm btn-info"><i class="bi bi-fast-forward"></i> <i class="bi bi-music-note-list"></i></button> para pular para a próxima música.
+										
+										<strong>Importante:</strong> Para o funcionamento correto da playlist, os áudios incluídos devem ter o loop <i class="bi bi-repeat"></i> ativado, caso contrário, quando a música terminar a playlist será pausada.
+									</small>
+								</div>`
+
 								return;
 							}
 						

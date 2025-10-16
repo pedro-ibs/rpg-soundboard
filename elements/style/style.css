@@ -263,3 +263,8 @@ progress::-moz-progress-bar {
 .track-controls .badge.bg-paused {
 	background-color: #17a2b8 !important;
 }
+
+
+.info-user{
+	line-height: 3 !important;
+}
