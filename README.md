@@ -129,3 +129,26 @@ Este projeto está sob a licença MIT. Sinta-se à vontade para:
     ✅ Distribuir versões modificadas
 
     ❌ Apenas atribua o crédito original
+
+
+<hr>
+
+### **Carregando configuração!**
+
+![demo](elements/img/01.jpeg)
+
+### **Tela inicial**
+
+![demo](elements/img/02.jpeg)
+
+### **Tocanso trilha sonora e sons ambiente de forma combinada**
+
+![demo](elements/img/03.jpeg)
+
+### **Indicação de qual áudio está tocando e qual está pausado**
+
+![demo](elements/img/04.jpeg)
+
+### **Indicação de qual está tocando na lista de reprodução**
+
+![demo](elements/img/05.jpeg)
